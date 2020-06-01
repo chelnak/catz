@@ -1,0 +1,60 @@
+trigger:
+  batch: true
+  branches:
+    include:
+      - "*"
+  paths:
+    include:
+      - jcat/*
+      - azure-pipelines.yml
+      - requirements.txt
+
+pr: none
+
+pool:
+  vmImage: 'windows-latest'
+
+stages:
+  - stage: CI
+    jobs: 
+    - job: Build
+      steps:
+        - task: UseGitVersion@5
+          inputs:
+            versionSpec: 5.x
+            useConfigFile: true
+            configFilePath: GitVersion.yml
+
+        - task: UsePythonVersion@0
+          inputs:
+            versionSpec: 3.8.3
+
+        - script: python -m pip install -r requirements.txt
+        - script: pyinstaller ./jcat/app.py -n jcat --noconfirm
+
+        - task: PublishPipelineArtifact@1
+          inputs:
+            targetPath: $(System.DefaultWorkingDirectory)/dist/jcat/jcat.exe
+            artifactName: publish
+
+  - stage: Release
+    dependsOn: CI
+    condition: succeeded('CI')
+    jobs:
+    - job: release
+      condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+      steps:
+        - task: DownloadPipelineArtifact@2
+          displayName: Restore Pipeline Artifacts
+
+        - task: GitHubRelease@0
+          displayName: Create a GitHub GitHubRelease
+          inputs:
+            gitHubConnection: 'chelnak'
+            repositoryName: 'chelnak/jcat'
+            action: 'create'
+            target: '$(Build.SourceVersion)'
+            tagSource: 'manual'
+            tag: '$(Build.BuildNumber)'
+            assets: "$(Pipeline.Workspace)/publish/jcat.exe"
+          enabled: false
