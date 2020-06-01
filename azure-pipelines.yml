@@ -52,6 +52,7 @@ stages:
 
         - task: GitHubRelease@0
           displayName: Create a GitHub GitHubRelease
+          condition: startswith(variables['Build.SourceBranch'], 'refs/tags/v')
           inputs:
             gitHubConnection: 'chelnak'
             repositoryName: 'chelnak/jcat'
