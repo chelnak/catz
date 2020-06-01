@@ -1,20 +1,23 @@
 #!/usr/bin/env python3
 
 import sys
-import configargparse
+import pyfiglet
+from configargparse import ArgParser, RawTextHelpFormatter
 
 
 def get_args():
+    name = pyfiglet.figlet_format('jcat')
+    parser = ArgParser(prog='jcat',
+                       description=name,
+                       formatter_class=RawTextHelpFormatter)
 
-    parser = configargparse.ArgParser()
     parser.add("filename",
                help='Path to the file that will be loaded')
 
-    args = parser.parse_args()
+    if not len(sys.argv) > 1:
+        print(parser.format_help())
+        exit(1)
 
-    if args.filename is None:
-        print("Required argument filename is missing")
-        print(parser.print_help())
-        sys.exit(1)
+    args = parser.parse_args()
 
     return args
