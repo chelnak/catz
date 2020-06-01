@@ -4,7 +4,7 @@ from rich.syntax import Syntax
 from utilities import lexers, arguments, validators
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
 
     console = Console()
     console_theme = 'monokai'
