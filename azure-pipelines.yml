@@ -30,7 +30,10 @@ stages:
             versionSpec: 3.8.3
 
         - script: python -m pip install -r requirements.txt
-        - script: pyinstaller ./jcat/app.py -n jcat --noconfirm
+          displayName: Install dependencies
+
+        - script: pyinstaller ./jcat/app.py -F -n jcat --noconfirm
+          displayName: Build executable
 
         - task: PublishPipelineArtifact@1
           inputs:
