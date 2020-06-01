@@ -2,10 +2,18 @@
 
 # jcat :pencil:
 
-A bare bones syntax highlighting tool for the cmdline.
+A colourful syntax highlighting tool for your terminal.
+
+jcat supports all of the lexers listed [here](https://pygments.org/docs/lexers/)
 
 ## Usage
 
 ```PowerShell
 jcat ./myfile.json
 ```
+
+## Powered by
+
+jcat is powered by:
+* [rich](https://github.com/willmcgugan/rich)
+* [pygments](https://github.com/pygments/pygments)
