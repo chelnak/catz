@@ -50,14 +50,11 @@ stages:
         - task: DownloadPipelineArtifact@2
           displayName: Restore Pipeline Artifacts
 
-        - task: GitHubRelease@0
+        - task: GitHubRelease@1
           displayName: Create a GitHub GitHubRelease
           condition: startswith(variables['Build.SourceBranch'], 'refs/tags/v')
           inputs:
             gitHubConnection: 'chelnak'
+            title: jcat
             repositoryName: 'chelnak/jcat'
-            action: 'create'
-            target: '$(Build.SourceVersion)'
-            tagSource: 'manual'
-            tag: '$(Build.BuildNumber)'
             assets: "$(Pipeline.Workspace)/publish/jcat.exe"
