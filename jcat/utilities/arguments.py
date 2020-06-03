@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import sys
+from sys import exit, argv
 import pyfiglet
 from configargparse import ArgParser, RawTextHelpFormatter
 
@@ -14,7 +14,7 @@ def get_args():
     parser.add("filename",
                help='Path to the file that will be loaded')
 
-    if not len(sys.argv) > 1:
+    if not len(argv) > 1:
         print(parser.format_help())
         exit(1)
 

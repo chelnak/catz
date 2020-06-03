@@ -1,4 +1,5 @@
 
+from sys import exit
 from rich.console import Console
 from rich.syntax import Syntax
 from utilities import lexers, arguments, validators
