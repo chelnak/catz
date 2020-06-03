@@ -17,7 +17,7 @@ exe = Executable(
     targetName="jcat.exe"
 )
 
-version = os.environ.get('GITVERSION_SEMVER.', '0.0-local')
+version = os.environ.get('GITVERSION_SEMVER', '0.0-local')
 
 setup(
     name="jcat",
