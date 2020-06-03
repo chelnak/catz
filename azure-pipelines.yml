@@ -32,12 +32,12 @@ stages:
         - script: python -m pip install -r requirements.txt
           displayName: Install dependencies
 
-        - script: pyinstaller ./jcat/app.py -F -n jcat --noconfirm
+        - script: python setup.py bdist_msi
           displayName: Build executable
 
         - task: PublishPipelineArtifact@1
           inputs:
-            targetPath: $(System.DefaultWorkingDirectory)/dist/jcat.exe
+            targetPath: $(System.DefaultWorkingDirectory)/dist/*
             artifactName: publish
 
   - stage: Release
@@ -57,4 +57,4 @@ stages:
             gitHubConnection: 'chelnak'
             title: jcat
             repositoryName: 'chelnak/jcat'
-            assets: "$(Pipeline.Workspace)/publish/jcat.exe"
+            assets: "$(Pipeline.Workspace)/publish/*"
