@@ -37,7 +37,7 @@ stages:
 
         - task: PublishPipelineArtifact@1
           inputs:
-            targetPath: $(System.DefaultWorkingDirectory)/dist/*
+            targetPath: $(System.DefaultWorkingDirectory)/dist
             artifactName: publish
 
   - stage: Release
@@ -57,4 +57,4 @@ stages:
             gitHubConnection: 'chelnak'
             title: jcat
             repositoryName: 'chelnak/jcat'
-            assets: "$(Pipeline.Workspace)/publish/*"
+            assets: "$(Pipeline.Workspace)/publish/*.msi"
