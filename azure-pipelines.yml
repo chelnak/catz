@@ -45,14 +45,13 @@ stages:
     condition: succeeded('CI')
     jobs:
     - job: release
-      condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+      condition: startswith(variables['Build.SourceBranch'], 'refs/tags/v')
       steps:
         - task: DownloadPipelineArtifact@2
           displayName: Restore Pipeline Artifacts
-
         - task: GitHubRelease@1
           displayName: Create a GitHub GitHubRelease
-          condition: startswith(variables['Build.SourceBranch'], 'refs/tags/v')
+          condition: 
           inputs:
             gitHubConnection: 'chelnak'
             title: jcat
