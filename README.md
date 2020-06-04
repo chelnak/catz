@@ -17,3 +17,8 @@ jcat ./myfile.json
 jcat is powered by:
 * [rich](https://github.com/willmcgugan/rich)
 * [pygments](https://github.com/pygments/pygments)
+
+## Releasing
+
+1. git tag vX.X.X
+2. git push origin vX.X.X
