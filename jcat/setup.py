@@ -1,4 +1,5 @@
 import os
+import uuid
 from cx_Freeze import setup, Executable
 from config.handler import set_version
 
@@ -17,7 +18,8 @@ build_exe_options = {
 }
 
 bdist_msi_options = {
-    'upgrade_code': 'de0978d2-6462-41d4-a86f-69487bf35efa'
+    'product_code': '{{{0}}}'.format(str(uuid.uuid4())),
+    'upgrade_code': '{de0978d2-6462-41d4-a86f-69487bf35efa}'
 }
 
 exe = Executable(
