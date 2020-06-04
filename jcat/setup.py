@@ -1,24 +1,32 @@
 import os
 from cx_Freeze import setup, Executable
+from config.handler import set_version
 
 build_exe_options = {
     "includes": [
-        "jcat/utilities"
+        "utilities"
+    ],
+    "excludes": [
+        "tkinter"
     ],
     "packages": [
+        "pygments",
         "pyfiglet",
         "configargparse"
     ]
 }
 
-bdist_msi_options = {}
+bdist_msi_options = {
+    "upgrade_code": 'de0978d2-6462-41d4-a86f-69487bf35efa'
+}
 
 exe = Executable(
-    script="jcat/app.py",
+    script="app.py",
     targetName="jcat.exe"
 )
 
-version = os.environ.get('GITVERSION_SEMVER', '0.0-local')
+version = os.environ.get('GITVERSION_SEMVER', '0.0.0')
+set_version(version)
 
 setup(
     name="jcat",

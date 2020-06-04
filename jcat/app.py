@@ -2,7 +2,7 @@
 from sys import exit
 from rich.console import Console
 from rich.syntax import Syntax
-from utilities import lexers, arguments, validators
+from utilities import lexers, validators, argument_handler
 
 
 if __name__ == '__main__':
@@ -12,7 +12,7 @@ if __name__ == '__main__':
 
     try:
 
-        args = arguments.get_args()
+        args = argument_handler.get_args()
 
         with open(args.filename, 'r') as file:
             data = file.read()
