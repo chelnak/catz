@@ -2,17 +2,21 @@
 from sys import exit
 from rich.console import Console
 from rich.syntax import Syntax
-from utilities import lexers, validators, argument_handler
+from utilities import lexers, validators, argument_handler, themes
 
 
 if __name__ == '__main__':
 
-    console = Console()
-    console_theme = 'monokai'
-
     try:
 
         args = argument_handler.get_args()
+
+        console = Console()
+        console_theme = args.theme
+
+        if args.list_themes is True:
+            themes.get_themes()
+            exit(0)
 
         with open(args.filename, 'r') as file:
             data = file.read()

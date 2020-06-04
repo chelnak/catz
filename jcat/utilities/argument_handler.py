@@ -3,7 +3,6 @@ from sys import exit, argv
 from configargparse import ArgumentParser, RawTextHelpFormatter
 from config.handler import get_config, get_full_version
 
-
 config = get_config()
 
 
@@ -14,9 +13,26 @@ def get_args():
         description=name,
         formatter_class=RawTextHelpFormatter
     )
+
     parser.add(
         "filename",
+        nargs="?",
         help='Path to the file that will be loaded'
+    )
+
+    parser.add(
+        "--theme",
+        dest="theme",
+        env_var="JCAT_THEME",
+        default="native",
+        help="Override the default theme."
+    )
+
+    parser.add(
+        "--list-themes",
+        action='store_true',
+        dest="list_themes",
+        help="List all available console themes"
     )
 
     parser.add(
