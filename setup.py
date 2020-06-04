@@ -6,7 +6,8 @@ build_exe_options = {
         "jcat/utilities"
     ],
     "packages": [
-        "pyfiglet"
+        "pyfiglet",
+        "configargparse"
     ]
 }
 
