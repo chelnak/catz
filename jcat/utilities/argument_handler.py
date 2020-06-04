@@ -7,36 +7,36 @@ config = get_config()
 
 
 def get_args():
-    name = pyfiglet.figlet_format(config["app_name"])
+    name = pyfiglet.figlet_format(config['app_name'])
     parser = ArgumentParser(
-        prog=config["app_name"],
+        prog=config['app_name'],
         description=name,
         formatter_class=RawTextHelpFormatter
     )
 
     parser.add(
-        "filename",
-        nargs="?",
+        'filename',
+        nargs='?',
         help='Path to the file that will be loaded'
     )
 
     parser.add(
-        "--theme",
-        dest="theme",
-        env_var="JCAT_THEME",
-        default="native",
-        help="Override the default theme."
+        '--theme',
+        dest='theme',
+        env_var='JCAT_THEME',
+        default='native',
+        help='Override the default theme.'
     )
 
     parser.add(
-        "--list-themes",
+        '--list-themes',
         action='store_true',
-        dest="list_themes",
-        help="List all available console themes"
+        dest='list_themes',
+        help='List all available console themes'
     )
 
     parser.add(
-        "--version",
+        '--version',
         action='version',
         version=get_full_version()
     )

@@ -14,16 +14,16 @@ def get_config():
 
 def get_short_version():
     data = get_config()
-    return data["version"]
+    return data['version']
 
 
 def get_full_version():
     data = get_config()
-    return data["version_text"].format(data["version"])
+    return data['version_text'].format(data['version'])
 
 
 def set_version(version):
     config = get_config()
     with open(CONFIG, 'w') as file:
-        config["version"] = version
+        config['version'] = version
         file.write(json.dumps(config, indent=4))
