@@ -20,5 +20,6 @@ jcat is powered by:
 
 ## Releasing
 
-1. git tag vX.X.X
-2. git push origin vX.X.X
+1. git tag -a vX.X.X -m "Release vX.X.X"
+2. git push --follow-tags
+
