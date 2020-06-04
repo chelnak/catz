@@ -4,19 +4,34 @@
 
 A colourful syntax highlighting tool for your terminal.
 
-jcat supports all of the lexers listed [here](https://pygments.org/docs/lexers/)
+`jcat` is powered by [rich](https://github.com/willmcgugan/rich) and [pygments](https://github.com/pygments/pygments). You can find a list of supported lexers [here](https://pygments.org/docs/lexers/).
 
 ## Usage
+
+### Print a file with syntax highlighting
 
 ```PowerShell
 jcat ./myfile.json
 ```
 
-## Powered by
+### List available themes
 
-jcat is powered by:
-* [rich](https://github.com/willmcgugan/rich)
-* [pygments](https://github.com/pygments/pygments)
+```PowerShell
+jcat --list-themes
+```
+
+### Print a file with syntax highlighting and override the default theme
+
+```PowerShell
+jcat ./myfile.json --theme vs
+```
+
+### Show the content of a file with syntax highlighting and override the default theme with an environment variable
+
+```PowerShell
+$ENV:JCAT_THEME="vs"
+jcat ./myfile.json
+```
 
 ## Releasing
 
