@@ -11,8 +11,10 @@ A colourful syntax highlighting tool for your terminal.
 ### Print a file with syntax highlighting
 
 ```PowerShell
-jcat ./myfile.json
+jcat ./HelloWorld.ps1
 ```
+
+!["HelloWorld"](media/HelloWorld.PNG)
 
 ### List available themes
 
@@ -23,14 +25,14 @@ jcat --list-themes
 ### Print a file with syntax highlighting and override the default theme
 
 ```PowerShell
-jcat ./myfile.json --theme vs
+jcat ./HelloWorld.ps1 --theme vs
 ```
 
 ### Show the content of a file with syntax highlighting and override the default theme with an environment variable
 
 ```PowerShell
 $ENV:JCAT_THEME="vs"
-jcat ./myfile.json
+jcat ./HelloWorld.ps1
 ```
 
 ## Releasing
