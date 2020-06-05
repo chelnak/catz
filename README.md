@@ -4,7 +4,19 @@
 
 A colourful syntax highlighting tool for your terminal.
 
-`jcat` is powered by [rich](https://github.com/willmcgugan/rich) and [pygments](https://github.com/pygments/pygments). You can find a list of supported lexers [here](https://pygments.org/docs/lexers/).
+`jcat` is powered by [rich](https://github.com/willmcgugan/rich) and [pygments](https://github.com/pygments/pygments).
+
+## Supported filetypes
+
+`jcat` supports all of the lexers provided by pygments. You can find a full list [here](https://pygments.org/docs/lexers/).
+
+## Install
+
+Install the latest release from the Releases page or run the following:
+
+```PowerShell
+    Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/chelnak/jcat/master/install.ps1'))
+```
 
 ## Usage
 
