@@ -28,7 +28,9 @@ function Write-Header {
 }
 
 function New-BuildEnvironment {
-    $null = New-Item -Path $SCRIPT:ArtifactsDir
+    Write-Header -Message "Preparing build environment"
+    pip install -r $ProjectRoot/requirements.txt
+    $null = New-Item -Path $SCRIPT:ArtifactsDir -ItemType Directory
 }
 
 
@@ -44,6 +46,7 @@ function Get-WixBinaries {
 
 
 function Set-Version {
+    Write-Header -Message "Configuring static version number"
 
     $BuildVersion = $ENV:GITVERSION_SEMVER
 
@@ -63,7 +66,6 @@ function Set-Version {
 function New-PyPiPackage {
 
     Write-Header -Message "Starting PyPi package build"
-    pip install -r $ProjectRoot/requirements.txt
     python setup.py bdist_wheel -d $SCRIPT:ArtifactsDir
     python setup.py sdist -d $SCRIPT:ArtifactsDir
 }
@@ -74,7 +76,6 @@ function New-DebPackage {
     Write-Header -Message "Starting deb package build"
 
     sudo apt-get install python-stdeb fakeroot python-all -y
-    pip install -r $ProjectRoot/requirements.txt
     python setup.py --command-packages=stdeb.command bdist_deb
     Move-Item -Path $SCRIPT:ProjectRoot/deb_dist/*.deb -Destination $SCRIPT:ArtifactsDir
 }
