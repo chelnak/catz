@@ -27,6 +27,10 @@ function Write-Header {
 "@
 }
 
+function New-BuildEnvironment {
+    $null = New-Item -Path $SCRIPT:ArtifactsDir
+}
+
 
 function Get-WixBinaries {
     $WixDownloadUrl = "https://github.com/wixtoolset/wix3/releases/download/wix3112rtm/wix311-binaries.zip"
@@ -111,13 +115,18 @@ function Start-OsxBuild {
 
 }
 
+function Start-GenericBuild {
+    Write-Header -Message "Starting platform independent build steps"
 
+    # --- Build a generic python package
+    New-PyPiPackage
+}
 
 function Start-PlatformSpecificBuild {
 
     $Platform = $PSVersionTable.Platform
 
-    Write-Header -Message "Starting [$Platform] platform build steps"
+    Write-Header -Message "Starting specific build steps [$Platform]"
 
     switch($Platform) {
         "Win32NT" {
