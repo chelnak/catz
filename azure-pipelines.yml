@@ -15,12 +15,21 @@ trigger:
 pr: none
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'ubuntu-18.04'
 
 stages:
   - stage: CI
     jobs: 
     - job: Build
+      strategy:
+        matrix:
+          linux:
+            imageName: 'ubuntu-18.04'
+          windows:
+            imageName: 'windows-latest'
+      pool:
+        vmImage: $(imageName)
+
       steps:
         - task: UseGitVersion@5
           inputs:
@@ -32,16 +41,11 @@ stages:
           inputs:
             versionSpec: 3.8.3
 
-        - script: python -m pip install -r requirements.txt
-          displayName: Install dependencies
-
-        - script: python setup.py bdist_msi
-          displayName: Build executable
-          workingDirectory: $(System.DefaultWorkingDirectory)/jcat
+        - pwsh: $(System.DefaultWorkingDirectory)/scripts/build.ps1
 
         - task: PublishPipelineArtifact@1
           inputs:
-            targetPath: $(System.DefaultWorkingDirectory)/jcat/dist
+            targetPath: $(System.DefaultWorkingDirectory)/artifacts
             artifactName: publish
 
   - stage: Release
@@ -50,9 +54,16 @@ stages:
     jobs:
     - job: release
       condition: startswith(variables['Build.SourceBranch'], 'refs/tags/v')
-      steps:
+      steps:      
         - task: DownloadPipelineArtifact@2
           displayName: Restore Pipeline Artifacts
+
+        - script: 'pip install twine'
+        - task: TwineAuthenticate@0
+          inputs:
+            externalFeeds: 'pypi-jcat'
+        - script: 'twine upload -r {pypi-jcat/jcat} --config-file $(PYPIRC_PATH) "$(Pipeline.Workspace)/publish/*"'
+
         - task: GitHubRelease@1
           displayName: Create a GitHub GitHubRelease
           condition: 
@@ -60,4 +71,4 @@ stages:
             gitHubConnection: 'chelnak'
             title: jcat
             repositoryName: 'chelnak/jcat'
-            assets: "$(Pipeline.Workspace)/publish/*.msi"
+            assets: "$(Pipeline.Workspace)/publish/*.*"
