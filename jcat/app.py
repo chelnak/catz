@@ -2,11 +2,10 @@
 from sys import exit
 from rich.console import Console
 from rich.syntax import Syntax
-from utilities import lexers, validators, argument_handler, themes
+from jcat.utilities import lexers, validators, argument_handler, themes
 
 
-if __name__ == '__main__':
-
+def cli():
     try:
 
         args = argument_handler.get_args()
@@ -35,6 +34,10 @@ if __name__ == '__main__':
         console.print_exception(theme=console_theme)
         exit(1)
 
-    except Exception:
-        console.print_exception(theme=console_theme)
+    except Exception as e:
+        raise e
         exit(1)
+
+
+if __name__ == '__main__':
+    cli()
