@@ -20,7 +20,7 @@ pool:
 stages:
   - stage: CI
     jobs: 
-    - job: Build
+    - job: GenerateBuildNumber
       steps:
         - task: UseGitVersion@5
           inputs:
@@ -28,11 +28,22 @@ stages:
             useConfigFile: true
             configFilePath: GitVersion.yml
 
+        - pwsh: Write-"##vso[task.setvariable variable=GITVERSION_SEMVER;isOutput=true]$ENV:GITVERSION_SEMVER"
+          name: version
+
+    - job: Build
+      dependsOn: GenerateBuildNumber
+      variables:
+        GITVERSION_SEMVER: $[ dependencies.GenerateBuildNumber.outputs['version.GITVERSION_SEMVER'] ]
+      steps:
         - task: UsePythonVersion@0
           inputs:
             versionSpec: 3.8.3
 
         - pwsh: $(System.DefaultWorkingDirectory)/scripts/build.ps1
+          displayName: Build artifacts
+          env:
+            GITVERSION_SEMVER: $(GITVERSION_SEMVER)
 
         - task: PublishPipelineArtifact@1
           inputs:
@@ -46,6 +57,9 @@ stages:
             imageName: 'ubuntu-18.04'
           windows:
             imageName: 'windows-latest'
+      dependsOn: GenerateBuildNumber
+      variables:
+        GITVERSION_SEMVER: $[ dependencies.GenerateBuildNumber.outputs['version.GITVERSION_SEMVER'] ]
       pool:
         vmImage: $(imageName)
       steps:
@@ -54,6 +68,9 @@ stages:
             versionSpec: 3.8.3
 
         - pwsh: $(System.DefaultWorkingDirectory)/scripts/build.ps1 -BuildForPlatform
+          displayName: Build artifacts
+          env:
+            GITVERSION_SEMVER: $(GITVERSION_SEMVER)
 
         - task: PublishPipelineArtifact@1
           inputs:
