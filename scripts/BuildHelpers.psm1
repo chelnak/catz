@@ -51,7 +51,7 @@ function Set-Version {
     $BuildVersion = $ENV:GITVERSION_SEMVER
 
     if (!$BuildVersion) {
-        Write-Host "BuildVersion is not set, assuming development"
+        Write-Warning -Message "BuildVersion is not set, assuming development"
         return
     }
 
@@ -75,7 +75,7 @@ function New-DebPackage {
 
     Write-Header -Message "Starting deb package build"
 
-    sudo apt-get install python-stdeb fakeroot python-all -y
+    sudo apt-get install python3-stdeb python3-setuptools python3-all fakeroot -y
     python setup.py --command-packages=stdeb.command bdist_deb
     Move-Item -Path $SCRIPT:ProjectRoot/deb_dist/*.deb -Destination $SCRIPT:ArtifactsDir
 }
