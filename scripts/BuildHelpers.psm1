@@ -60,7 +60,7 @@ function New-PyPiPackage {
 function New-DebPackage {
     Write-Header -Message "Starting deb package build"
 
-    sudo apt-get install python3-stdeb python3-setuptools python3-all fakeroot -y
+    sudo apt-get install python3-stdeb python3-setuptools python3-all python-all fakeroot -y
     python setup.py --command-packages=stdeb.command bdist_deb
     Move-Item -Path $SCRIPT:ProjectRoot/deb_dist/*.deb -Destination $SCRIPT:ArtifactsDir
 }
