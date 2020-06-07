@@ -21,15 +21,6 @@ stages:
   - stage: CI
     jobs: 
     - job: Build
-      strategy:
-        matrix:
-          linux:
-            imageName: 'ubuntu-18.04'
-          windows:
-            imageName: 'windows-latest'
-      pool:
-        vmImage: $(imageName)
-
       steps:
         - task: UseGitVersion@5
           inputs:
@@ -42,6 +33,27 @@ stages:
             versionSpec: 3.8.3
 
         - pwsh: $(System.DefaultWorkingDirectory)/scripts/build.ps1
+
+        - task: PublishPipelineArtifact@1
+          inputs:
+            targetPath: $(System.DefaultWorkingDirectory)/artifacts
+            artifactName: publish
+
+    - job: BuildPlatformSpecific
+      strategy:
+        matrix:
+          linux:
+            imageName: 'ubuntu-18.04'
+          windows:
+            imageName: 'windows-latest'
+      pool:
+        vmImage: $(imageName)
+      steps:
+        - task: UsePythonVersion@0
+          inputs:
+            versionSpec: 3.8.3
+
+        - pwsh: $(System.DefaultWorkingDirectory)/scripts/build.ps1 -BuildForPlatform
 
         - task: PublishPipelineArtifact@1
           inputs:
