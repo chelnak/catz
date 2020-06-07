@@ -15,7 +15,7 @@ A colourful syntax highlighting tool for your terminal.
 Install the latest release from the Releases page or run the following:
 
 ```PowerShell
-    Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/chelnak/jcat/master/install.ps1'))
+    Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/chelnak/jcat/master/scripts/install.ps1'))
 ```
 
 ## Usage
