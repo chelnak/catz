@@ -39,7 +39,7 @@ stages:
             targetPath: $(System.DefaultWorkingDirectory)/artifacts
             artifactName: publish
 
-    - job: BuildPlatformSpecific
+    - job: BuildForPlatform
       strategy:
         matrix:
           linux:
