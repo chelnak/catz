@@ -8,11 +8,10 @@ $Env:PYTHONPATH = ""
 
 
 function Write-Header {
-
-    param(
-        [Parameter(Mandatory=$True)]
-        [String]$Message
-    )
+param(
+    [Parameter(Mandatory=$True)]
+    [String]$Message
+)
 
     $MessageLength = $Message.Length
     $Line = "#" * ($MessageLength + 10)
@@ -34,20 +33,8 @@ function New-BuildEnvironment {
 }
 
 
-function Get-WixBinaries {
-    $WixDownloadUrl = "https://github.com/wixtoolset/wix3/releases/download/wix3112rtm/wix311-binaries.zip"
-    $WixBinariesLoc = "$SCRIPT:ArtifactsDir/wix-binaries.zip"
-
-    if (!(Test-Path -Path WixBinariesLoc)) {
-        Invoke-RestMethod -Method Get -Uri $WixDownloadUrl -OutFile $WixBinariesLoc
-        Expand-Archive -Path $WixBinariesLoc -DestinationPath "$SCRIPT:ArtifactsDir/wix"
-    }
-}
-
-
 function Set-Version {
     Write-Header -Message "Configuring static version number"
-
     $BuildVersion = $ENV:GITVERSION_SEMVER
 
     if (!$BuildVersion) {
@@ -64,7 +51,6 @@ function Set-Version {
 
 
 function New-PyPiPackage {
-
     Write-Header -Message "Starting PyPi package build"
     python setup.py bdist_wheel -d $SCRIPT:ArtifactsDir
     python setup.py sdist -d $SCRIPT:ArtifactsDir
@@ -72,7 +58,6 @@ function New-PyPiPackage {
 
 
 function New-DebPackage {
-
     Write-Header -Message "Starting deb package build"
 
     sudo apt-get install python3-stdeb python3-setuptools python3-all fakeroot -y
@@ -82,10 +67,16 @@ function New-DebPackage {
 
 
 function New-MsiPackage {
+    Write-Header -Message "Starting msi package build"
 
-    #Get-WixBinaries
+    $null = New-Item -Path "$SCRIPT:ArtifactsDir/test-file.txt"
+    # $WixDownloadUrl = "https://github.com/wixtoolset/wix3/releases/download/wix3112rtm/wix311-binaries.zip"
+    # $WixBinariesLoc = "$SCRIPT:ArtifactsDir/wix-binaries.zip"
 
-    Write-Host "WINDOWS"
+    # if (!(Test-Path -Path WixBinariesLoc)) {
+    #     Invoke-RestMethod -Method Get -Uri $WixDownloadUrl -OutFile $WixBinariesLoc
+    #     Expand-Archive -Path $WixBinariesLoc -DestinationPath "$SCRIPT:ArtifactsDir/wix"
+    # }
     # try {
     #     pip3 install -r $ProjectRoot/requirements.txt
     
@@ -109,10 +100,6 @@ function New-MsiPackage {
     #     $Env:PYTHONPATH = $OldPythonPath 
     #     Pop-Location
     # }    
-
-}
-
-function Start-OsxBuild {
 
 }
 
