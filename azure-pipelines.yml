@@ -31,7 +31,7 @@ stages:
         - pwsh: Write-Output "##vso[task.setvariable variable=GITVERSION_SEMVER;isOutput=true]$ENV:GITVERSION_SEMVER"
           name: version
 
-    - job: Build
+    - job: BuildGeneric
       dependsOn: GenerateBuildNumber
       variables:
         GITVERSION_SEMVER: $[ dependencies.GenerateBuildNumber.outputs['version.GITVERSION_SEMVER'] ]
