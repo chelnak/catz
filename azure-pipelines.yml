@@ -28,7 +28,7 @@ stages:
             useConfigFile: true
             configFilePath: GitVersion.yml
 
-        - pwsh: Write-"##vso[task.setvariable variable=GITVERSION_SEMVER;isOutput=true]$ENV:GITVERSION_SEMVER"
+        - pwsh: Write-Output "##vso[task.setvariable variable=GITVERSION_SEMVER;isOutput=true]$ENV:GITVERSION_SEMVER"
           name: version
 
     - job: Build
