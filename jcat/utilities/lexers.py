@@ -9,7 +9,8 @@ def get_lexer(file_name):
         lexer = get_lexer_for_filename(file_name)
         return lexer.name
     except ClassNotFound:
-        console.print('''WARNING: Could not determine
-                        correct lexer for this file!''',
-                      style='yellow')
+        console.print(
+            'WARNING: Could not determine correct lexer for this file!',
+            style='yellow'
+        )
         return ''
