@@ -2,7 +2,7 @@
 from sys import exit
 from rich.console import Console
 from rich.syntax import Syntax
-from jcat.utilities import lexers, validators, argument_handler, themes
+from utilities import lexers, validators, argument_handler, themes, path_handler
 
 
 def cli():
@@ -17,22 +17,18 @@ def cli():
             themes.get_themes()
             exit(0)
 
-        with open(args.filename, 'r') as file:
-            data = file.read()
+        if args.list_lexers is True:
+            lexers.get_lexers()
+            exit(0)
 
-            lexer_name = lexers.get_lexer(file.name)
+        lexer_name, data = path_handler.handle_input(args.filename)
 
-            validators.validate(file.name, data)
+        syntax = Syntax(data,
+                        lexer_name,
+                        theme=console_theme,
+                        line_numbers=True)
 
-            syntax = Syntax(data,
-                            lexer_name,
-                            theme=console_theme,
-                            line_numbers=True)
-            console.print(syntax)
-
-    except FileNotFoundError:
-        console.print_exception(theme=console_theme)
-        exit(1)
+        console.print(syntax)
 
     except Exception as e:
         raise e

@@ -1,6 +1,6 @@
 from sys import exit, argv
 from configargparse import ArgumentParser, RawTextHelpFormatter
-from jcat.config.handler import get_config, get_full_version
+from config.handler import get_config, get_full_version
 
 config = get_config()
 
@@ -37,6 +37,20 @@ def get_args():
     )
 
     parser.add(
+        '--lexer',
+        dest='lexer',
+        env_var='JCAT_LEXER',
+        help='Override the lexer. Useful for when jcat can\'t determine the correct lexer for syntax highlighting.'
+    )
+
+    parser.add(
+        '--list-lexers',
+        action='store_true',
+        dest='list_lexers',
+        help='List all available lexers'
+    )
+
+    parser.add(
         '--list-themes',
         action='store_true',
         dest='list_themes',
@@ -54,5 +68,10 @@ def get_args():
         exit(1)
 
     args = parser.parse_args()
+
+    if (args.list_themes) and (args.list_lexers):
+        print(parser.format_help())
+        print('--list-themes and --list-lexers can\'t be used together')
+        exit(1)
 
     return args
