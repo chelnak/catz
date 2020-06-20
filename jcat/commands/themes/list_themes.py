@@ -4,12 +4,12 @@ from rich.table import Table
 from pygments.styles import get_all_styles
 
 
-@click.group()
-def themes():
+@click.group(name='themes', help='Commands for working with themes.')
+def themes_group():
     pass
 
 
-@themes.command(name='list')
+@themes_group.command(name='list', help='List all available themes.')
 def list_themes():
 
     styles = list(get_all_styles())

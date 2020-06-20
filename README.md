@@ -15,7 +15,7 @@ A colourful syntax highlighting tool for your terminal.
 Install the latest release from the Releases page or run the following:
 
 ```PowerShell
-    Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/chelnak/jcat/master/scripts/install.ps1'))
+pip install jcat
 ```
 
 ## Usage
@@ -23,28 +23,45 @@ Install the latest release from the Releases page or run the following:
 ### Print a file with syntax highlighting
 
 ```PowerShell
-jcat ./HelloWorld.ps1
+jcat get ./tests/terraform.tf
 ```
 
-!["HelloWorld"](media/HelloWorld.PNG)
+### Print a url with syntax highlighting
+
+```PowerShell
+jcat get https://raw.githubusercontent.com/chelnak/jcat/master/README.md
+```
 
 ### List available themes
 
 ```PowerShell
-jcat --list-themes
+jcat themes list
+```
+
+### List available lexers
+
+```PowerShell
+jcat lexers list
 ```
 
 ### Print a file with syntax highlighting and override the default theme
 
 ```PowerShell
-jcat ./HelloWorld.ps1 --theme vs
+jcat get ./HelloWorld.ps1 --theme vs
 ```
 
-### Show the content of a file with syntax highlighting and override the default theme with an environment variable
+### Set the theme with an environment variable
 
 ```PowerShell
 $ENV:JCAT_THEME="vs"
-jcat ./HelloWorld.ps1
+jcat get ./HelloWorld.ps1
+```
+
+### Set the lexer with an environment variable
+
+```PowerShell
+$ENV:JCAT_lexer="html"
+jcat get ./HelloWorld.ps1
 ```
 
 ## Releasing
