@@ -20,7 +20,7 @@ def resolve_path(path):
         return Path(path).resolve()
 
 
-def handle_input(path):
+def handle_input(path, lexer=None):
     url = parse.urlparse(path)
 
     if url.scheme:
@@ -51,5 +51,6 @@ def handle_input(path):
             console.print_exception()
             exit(1)
 
-    lexer_name = lexers.get_lexer(filename)
+    l = lexer if lexer is not None else filename
+    lexer_name = lexers.get_lexer(l)
     return lexer_name, data
