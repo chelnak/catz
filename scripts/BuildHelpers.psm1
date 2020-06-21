@@ -3,7 +3,6 @@ $SCRIPT:ProjectRoot = "$PSScriptRoot/.."
 $SCRIPT:ArtifactsDir = "$ProjectRoot/artifacts"
 $SCRIPT:Wix = "$SCRIPT:ArtifactsDir/wix"
 
-$OldPythonPath = $Env:PYTHONPATH
 $Env:PYTHONPATH = ""
 
 
@@ -129,4 +128,15 @@ function Start-PlatformSpecificBuild {
         }
     }
 
+}
+
+function Start-Linter {
+
+    Write-Header -Message "Starting flake8 linting"
+    $Result = flake8 $ProjectRoot/jcat/ --max-line-length=120 --tee
+
+    if ($Result.Count -gt 0) {
+        $Result
+        Write-Error -Message "$($Result.Count) issues found while linting"
+    }
 }
