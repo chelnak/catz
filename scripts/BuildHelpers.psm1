@@ -35,7 +35,6 @@ function New-BuildEnvironment {
 
 function Set-Version {
     Write-Header -Message "Configuring static version number"
-    Get-Item Env:\
     $BuildVersion = $ENV:GITVERSION_SEMVER
 
     if (!$BuildVersion) {

@@ -28,16 +28,13 @@ stages:
             useConfigFile: true
             configFilePath: GitVersion.yml
 
-        - pwsh: Get-Item Env:\
-          name: env
-
-        - pwsh: Write-Output "##vso[task.setvariable variable=GITVERSION_SEMVER;isOutput=true]$ENV:GITVERSION_SEMVER"
+        - pwsh: Write-Output "##vso[task.setvariable variable=GITVERSION_MAJORMINORPATCH;isOutput=true]$ENV:GITVERSION_MAJORMINORPATCH"
           name: version
 
     - job: BuildGeneric
       dependsOn: GenerateBuildNumber
       variables:
-        GITVERSION_SEMVER: $[ dependencies.GenerateBuildNumber.outputs['version.GITVERSION_SEMVER'] ]
+        GITVERSION_MAJORMINORPATCH: $[ dependencies.GenerateBuildNumber.outputs['version.GITVERSION_MAJORMINORPATCH'] ]
       steps:
         - task: UsePythonVersion@0
           inputs:
@@ -46,7 +43,7 @@ stages:
         - pwsh: $(System.DefaultWorkingDirectory)/scripts/build.ps1
           displayName: Build artifacts
           env:
-            GITVERSION_SEMVER: $(GITVERSION_SEMVER)
+            GITVERSION_MAJORMINORPATCH: $(GITVERSION_MAJORMINORPATCH)
 
         - task: PublishPipelineArtifact@1
           inputs:
