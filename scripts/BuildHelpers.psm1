@@ -43,8 +43,7 @@ function Set-Version {
 
     $Config = Get-Content -Path "$ProjectRoot/jcat/__init__.py" -Raw
     [Version]$ConfigVersion = [regex]::matches($Config, "VERSION\s=\s'(\d*.\d*.\d*)'").Groups[1].Value
-    $Config -Replace $ConfigVersion.ToString(), [Version]$BuildVersion.ToString() 
-    $Config | Set-Content -Path "$ProjectRoot/jcat/__init__.py" -Force
+    $Config -Replace $ConfigVersion.ToString(), $BuildVersion | Set-Content -Path "$ProjectRoot/jcat/__init__.py" -NoNewLine -Force
     Write-Host "BuildVersion set to $BuildVersion"
 }
 
