@@ -28,13 +28,13 @@ stages:
             useConfigFile: true
             configFilePath: GitVersion.yml
 
-        - pwsh: Write-Output "##vso[task.setvariable variable=GITVERSION_SEMVER;isOutput=true]$ENV:GITVERSION_SEMVER"
+        - pwsh: Write-Output "##vso[task.setvariable variable=GITVERSION_MAJORMINORPATCH;isOutput=true]$ENV:GITVERSION_MAJORMINORPATCH"
           name: version
 
     - job: BuildGeneric
       dependsOn: GenerateBuildNumber
       variables:
-        GITVERSION_SEMVER: $[ dependencies.GenerateBuildNumber.outputs['version.GITVERSION_SEMVER'] ]
+        GITVERSION_MAJORMINORPATCH: $[ dependencies.GenerateBuildNumber.outputs['version.GITVERSION_MAJORMINORPATCH'] ]
       steps:
         - task: UsePythonVersion@0
           inputs:
@@ -43,34 +43,7 @@ stages:
         - pwsh: $(System.DefaultWorkingDirectory)/scripts/build.ps1
           displayName: Build artifacts
           env:
-            GITVERSION_SEMVER: $(GITVERSION_SEMVER)
-
-        - task: PublishPipelineArtifact@1
-          inputs:
-            targetPath: $(System.DefaultWorkingDirectory)/artifacts
-            artifactName: publish
-
-    - job: BuildForPlatform
-      strategy:
-        matrix:
-          linux:
-            imageName: 'ubuntu-18.04'
-          windows:
-            imageName: 'windows-latest'
-      dependsOn: GenerateBuildNumber
-      variables:
-        GITVERSION_SEMVER: $[ dependencies.GenerateBuildNumber.outputs['version.GITVERSION_SEMVER'] ]
-      pool:
-        vmImage: $(imageName)
-      steps:
-        - task: UsePythonVersion@0
-          inputs:
-            versionSpec: 3.8.3
-
-        - pwsh: $(System.DefaultWorkingDirectory)/scripts/build.ps1 -BuildForPlatform
-          displayName: Build artifacts
-          env:
-            GITVERSION_SEMVER: $(GITVERSION_SEMVER)
+            GITVERSION_MAJORMINORPATCH: $(GITVERSION_MAJORMINORPATCH)
 
         - task: PublishPipelineArtifact@1
           inputs:

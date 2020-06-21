@@ -1,38 +1,27 @@
 
-from sys import exit
-from rich.console import Console
-from rich.syntax import Syntax
-from utilities import lexers, validators, argument_handler, themes, path_handler
+import click
+import sys
+from . import VERSION
+from .commands.themes import list_themes
+from .commands.lexers import list_lexers
+from .commands.input import handle_input
 
 
-def cli():
-    try:
+@click.group()
+@click.pass_context
+def cli(ctx):
+    pass
 
-        args = argument_handler.get_args()
 
-        console = Console()
-        console_theme = args.theme
+@cli.command(name='version', help='Display version info for jcat')
+def get_version():
+    print('Version: {0}'.format(VERSION))
+    sys.exit(0)
 
-        if args.list_themes is True:
-            themes.get_themes()
-            exit(0)
 
-        if args.list_lexers is True:
-            lexers.get_lexers()
-            exit(0)
-
-        lexer_name, data = path_handler.handle_input(args.filename)
-
-        syntax = Syntax(data,
-                        lexer_name,
-                        theme=console_theme,
-                        line_numbers=True)
-
-        console.print(syntax)
-
-    except Exception as e:
-        raise e
-        exit(1)
+cli.add_command(handle_input.get)
+cli.add_command(list_lexers.lexers_group)
+cli.add_command(list_themes.themes_group)
 
 
 if __name__ == '__main__':

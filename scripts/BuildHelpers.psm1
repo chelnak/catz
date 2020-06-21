@@ -3,7 +3,6 @@ $SCRIPT:ProjectRoot = "$PSScriptRoot/.."
 $SCRIPT:ArtifactsDir = "$ProjectRoot/artifacts"
 $SCRIPT:Wix = "$SCRIPT:ArtifactsDir/wix"
 
-$OldPythonPath = $Env:PYTHONPATH
 $Env:PYTHONPATH = ""
 
 
@@ -29,31 +28,30 @@ param(
 function New-BuildEnvironment {
     Write-Header -Message "Preparing build environment"
     pip install -r $ProjectRoot/requirements.txt
-    $null = New-Item -Path $SCRIPT:ArtifactsDir -ItemType Directory
+    $null = New-Item -Path $SCRIPT:ArtifactsDir -ItemType Directory -Force
 }
 
 
 function Set-Version {
     Write-Header -Message "Configuring static version number"
-    $BuildVersion = $ENV:GITVERSION_SEMVER
+    $BuildVersion = $ENV:GITVERSION_MAJORMINORPATCH
 
     if (!$BuildVersion) {
         Write-Warning -Message "BuildVersion is not set, assuming development"
         return
     }
 
-    $Config = Get-Content -Path "$ProjectRoot/jcat/config/config.py" -Raw
-    [Version]$ConfigVersion = [regex]::matches($Config, "'version':\s'(\d*.\d*.\d*)'").Groups[1].Value
-    $Config -Replace $ConfigVersion.ToString(), [Version]$BuildVersion.ToString() 
-    $Config | Set-Content -Path "$ProjectRoot/jcat/config/config.py" -Force
+    $Config = Get-Content -Path "$ProjectRoot/jcat/__init__.py" -Raw
+    [Version]$ConfigVersion = [regex]::matches($Config, "VERSION\s=\s'(\d*.\d*.\d*)'").Groups[1].Value
+    $Config -Replace $ConfigVersion.ToString(), $BuildVersion | Set-Content -Path "$ProjectRoot/jcat/__init__.py" -NoNewLine -Force
     Write-Host "BuildVersion set to $BuildVersion"
 }
 
 
 function New-PyPiPackage {
     Write-Header -Message "Starting PyPi package build"
-    python setup.py bdist_wheel -d $SCRIPT:ArtifactsDir
     python setup.py sdist -d $SCRIPT:ArtifactsDir
+    python setup.py bdist_wheel -d $SCRIPT:ArtifactsDir
 }
 
 
@@ -129,4 +127,15 @@ function Start-PlatformSpecificBuild {
         }
     }
 
+}
+
+function Start-Linter {
+
+    Write-Header -Message "Starting flake8 linting"
+    $Result = flake8 $ProjectRoot/jcat/ --max-line-length=120 --tee
+    $Result
+    if ($Result.Count -gt 0) {
+        $Result
+        Write-Error -Message "$($Result.Count) issues found while linting"
+    }
 }
