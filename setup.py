@@ -5,7 +5,7 @@ PRODUCT_NAME = 'jcat'
 
 DEPENDENCIES = []
 
-VERSION = os.environ.get('GITVERSION_SEMVER', '0.0.0')
+VERSION = os.environ.get('GITVERSION_MAJORMINORPATCH', '0.0.0')
 
 setup(
     name=PRODUCT_NAME,

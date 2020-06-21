@@ -42,10 +42,10 @@ function Set-Version {
         return
     }
 
-    $Config = Get-Content -Path "$ProjectRoot/jcat/config/config.py" -Raw
-    [Version]$ConfigVersion = [regex]::matches($Config, "'version':\s'(\d*.\d*.\d*)'").Groups[1].Value
+    $Config = Get-Content -Path "$ProjectRoot/jcat/__init__.py" -Raw
+    [Version]$ConfigVersion = [regex]::matches($Config, "VERSION\s=\s'(\d*.\d*.\d*)'").Groups[1].Value
     $Config -Replace $ConfigVersion.ToString(), [Version]$BuildVersion.ToString() 
-    $Config | Set-Content -Path "$ProjectRoot/jcat/config/config.py" -Force
+    $Config | Set-Content -Path "$ProjectRoot/jcat/__init__.py" -Force
     Write-Host "BuildVersion set to $BuildVersion"
 }
 
