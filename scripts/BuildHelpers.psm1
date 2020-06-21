@@ -28,7 +28,7 @@ param(
 function New-BuildEnvironment {
     Write-Header -Message "Preparing build environment"
     pip install -r $ProjectRoot/requirements.txt
-    $null = New-Item -Path $SCRIPT:ArtifactsDir -ItemType Directory
+    $null = New-Item -Path $SCRIPT:ArtifactsDir -ItemType Directory -Force
 }
 
 
@@ -51,8 +51,7 @@ function Set-Version {
 
 function New-PyPiPackage {
     Write-Header -Message "Starting PyPi package build"
-    python setup.py bdist_wheel -d $SCRIPT:ArtifactsDir
-    python setup.py sdist -d $SCRIPT:ArtifactsDir
+    python setup.py sdist bdist_wheel -d $SCRIPT:ArtifactsDir
 }
 
 
@@ -134,7 +133,7 @@ function Start-Linter {
 
     Write-Header -Message "Starting flake8 linting"
     $Result = flake8 $ProjectRoot/jcat/ --max-line-length=120 --tee
-
+    $Result
     if ($Result.Count -gt 0) {
         $Result
         Write-Error -Message "$($Result.Count) issues found while linting"
