@@ -35,7 +35,7 @@ function New-BuildEnvironment {
 
 function Set-Version {
     Write-Header -Message "Configuring static version number"
-    $BuildVersion = $ENV:GITVERSION_SEMVER
+    $BuildVersion = $ENV:GITVERSION_MAJORMINORPATCH
 
     if (!$BuildVersion) {
         Write-Warning -Message "BuildVersion is not set, assuming development"
