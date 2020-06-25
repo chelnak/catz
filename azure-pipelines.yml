@@ -64,9 +64,9 @@ stages:
         
         - task: TwineAuthenticate@1
           inputs:
-            pythonUploadServiceConnection: 'pypi/jcat'
+            pythonUploadServiceConnection: 'pypi'
 
-        - script: 'python -m twine upload -r pypi/jcat --config-file $(PYPIRC_PATH) "$(Pipeline.Workspace)/publish/*"'
+        - script: 'python -m twine upload -r pypi --config-file $(PYPIRC_PATH) "$(Pipeline.Workspace)/publish/*"'
 
         - task: GitHubRelease@1
           displayName: Create a GitHub GitHubRelease
