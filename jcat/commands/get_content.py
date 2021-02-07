@@ -1,16 +1,13 @@
+import sys
 import click
-from rich.console import Console
 from urllib import parse
-from .helpers import (
+from .command_helpers import (
     get_lexer_from_filename,
     get_lexer_from_name,
     write_output,
     get_url,
     get_file
 )
-
-
-console = Console()
 
 
 @click.command(name='get',
@@ -29,7 +26,13 @@ console = Console()
               help='''Override the lexer used when applying syntax highlighting.
               You can use jcat lexers list to view a list of available lexers.'''
               )
-def get(path, theme, lexer):
+@click.option('--passthru',
+              '-p',
+              is_flag=True,
+              envvar='JCAT_PASSTHRU',
+              help='''Pass the content of the file directly to stdout with no lexer applied.'''
+              )
+def get(path, theme, lexer, passthru):
 
     url = parse.urlparse(path)
 
@@ -38,9 +41,11 @@ def get(path, theme, lexer):
     else:
         data, filename = get_file(path)
 
-    if lexer is not None:
-        lexer_name = get_lexer_from_name(lexer)
+    if passthru:
+        print(data, file=sys.stdout)
     else:
-        lexer_name = get_lexer_from_filename(filename)
-
-    write_output(data, lexer_name, theme)
+        if lexer is not None:
+            lexer_name = get_lexer_from_name(lexer)
+        else:
+            lexer_name = get_lexer_from_filename(filename)
+        write_output(data, lexer_name, theme)
