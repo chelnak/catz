@@ -16,7 +16,6 @@ setup(
     name=PRODUCT_NAME,
     version=VERSION,
     author='chelnak',
-    author_email='chelnak@github',
     description='A colourful syntax highlighting tool for your terminal.',
     url='https://github.com/chelnak/catz',
     packages=['catz', 'catz.commands'],
