@@ -1,27 +1,26 @@
 
 import click
-import sys
-from . import VERSION
-from .commands.themes import list_themes
-from .commands.lexers import list_lexers
-from .commands.input import handle_input
+from click_default_group import DefaultGroup
 
 
-@click.group()
+from .commands import (
+    get_content,
+    list_lexers,
+    list_themes,
+    get_version
+)
+
+
+@click.group(cls=DefaultGroup, default='get', default_if_no_args=True)
 @click.pass_context
 def cli(ctx):
     pass
 
 
-@cli.command(name='version', help='Display version info for jcat')
-def get_version():
-    print('Version: {0}'.format(VERSION))
-    sys.exit(0)
-
-
-cli.add_command(handle_input.get)
+cli.add_command(get_content.get)
 cli.add_command(list_lexers.lexers_group)
 cli.add_command(list_themes.themes_group)
+cli.add_command(get_version.version)
 
 
 if __name__ == '__main__':
