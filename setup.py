@@ -2,7 +2,7 @@ import os
 from setuptools import setup
 
 
-PRODUCT_NAME = 'jcat'
+PRODUCT_NAME = 'catz'
 DEPENDENCIES = [
     'rich==1.3.0',
     'click==7.1.2',
@@ -18,10 +18,10 @@ setup(
     author='chelnak',
     author_email='chelnak@github',
     description='A colourful syntax highlighting tool for your terminal.',
-    url='https://github.com/chelnak/jcat',
-    packages=['jcat', 'jcat.commands'],
+    url='https://github.com/chelnak/catz',
+    packages=['catz', 'catz.commands'],
     entry_points={
-        'console_scripts': ['jcat = jcat.app:cli']
+        'console_scripts': ['catz = catz.app:cli']
     },
     install_requires=DEPENDENCIES
 )

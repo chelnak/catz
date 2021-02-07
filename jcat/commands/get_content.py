@@ -16,20 +16,20 @@ from .command_helpers import (
 @click.argument('path')
 @click.option('--theme',
               default='native',
-              envvar='JCAT_THEME',
+              envvar='CATZ_THEME',
               help='''Override the default syntaxt highlighting theme.
-              You can use jcat themes list to view a list of available themes.'''
+              You can use catz themes list to view a list of available themes.'''
               )
 @click.option('--lexer',
               default=None,
-              envvar='JCAT_LEXER',
+              envvar='CATZ_LEXER',
               help='''Override the lexer used when applying syntax highlighting.
-              You can use jcat lexers list to view a list of available lexers.'''
+              You can use catz lexers list to view a list of available lexers.'''
               )
 @click.option('--passthru',
               '-p',
               is_flag=True,
-              envvar='JCAT_PASSTHRU',
+              envvar='CATZ_PASSTHRU',
               help='''Pass the content of the file directly to stdout with no lexer applied.'''
               )
 def get(path, theme, lexer, passthru):

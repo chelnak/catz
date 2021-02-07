@@ -8,7 +8,7 @@ trigger:
       - "v*"      
   paths:
     include:
-      - jcat/*
+      - catz/*
       - azure-pipelines.yml
       - requirements.txt
 
@@ -42,7 +42,7 @@ stages:
           displayName: Install Requirements
 
         - bash: |
-            flake8 jcat/ --max-line-length=120 --tee
+            flake8 catz/ --max-line-length=120 --tee
           displayName: Lint
 
         - bash: |
@@ -90,6 +90,6 @@ stages:
           condition: 
           inputs:
             gitHubConnection: 'chelnak'
-            title: jcat
-            repositoryName: 'chelnak/jcat'
+            title: catz
+            repositoryName: 'chelnak/catz'
             assets: "$(Pipeline.Workspace)/publish/*.*"
