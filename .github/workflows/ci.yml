@@ -36,7 +36,7 @@ jobs:
 
     - name: Lint ✏️
       run: | 
-        flake8 catz/ --max-line-length=120 --tee
+        python -m flake8 catz/ --max-line-length=120 --tee
 
     - name: Install Dependencies 🚧
       run: |
