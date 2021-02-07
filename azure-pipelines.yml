@@ -82,8 +82,7 @@ stages:
           inputs:
             pythonUploadServiceConnection: 'pypi'
 
-        - bash: 
-        - bash: python -m twine upload --skip-existing --verbose --repository pypi --config-file $(PYPIRC_PATH) "$(Pipeline.Workspace)/publish/*.whl"
+        - bash: python -m twine upload --skip-existing --verbose --repository pypi --config-file $(PYPIRC_PATH) "$(Pipeline.Workspace)/publish/dist/*.whl"
           displayName: Publish Package
 
         - task: GitHubRelease@1
