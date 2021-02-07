@@ -1,10 +1,15 @@
 import os
-from setuptools import find_packages, setup
+from setuptools import setup
 
 
 PRODUCT_NAME = 'jcat'
-DEPENDENCIES = []
-VERSION = os.environ.get('GITVERSION_MAJORMINORPATCH', '0.0.0')
+DEPENDENCIES = [
+    'rich==1.3.0',
+    'click==7.1.2',
+    'requests==2.25.1',
+    'click-default-group==1.2.2'
+]
+VERSION = os.environ.get('GITVERSION_MAJORMINORPATCH', '0.0.3')
 
 
 setup(
@@ -14,8 +19,7 @@ setup(
     author_email='chelnak@github',
     description='A colourful syntax highlighting tool for your terminal.',
     url='https://github.com/chelnak/jcat',
-    packages=find_packages(),
-    include_package_data=True,
+    packages=['jcat', 'jcat.commands'],
     entry_points={
         'console_scripts': ['jcat = jcat.app:cli']
     },
