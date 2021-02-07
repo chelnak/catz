@@ -67,11 +67,11 @@ catz get ./HelloWorld.ps1
 ### Passthrough to stdout
 
 ```PowerShell
-catz ./HelloWorld.ps1 -passthru
+catz ./HelloWorld.ps1 --passthru
 ```
 
 ```PowerShell
-catz ./HelloWorld.ps1 -passthru >> output.txt
+catz ./HelloWorld.ps1 --passthru >> output.txt
 ```
 
 ## Releasing
