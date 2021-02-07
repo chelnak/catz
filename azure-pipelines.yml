@@ -20,34 +20,48 @@ pool:
 stages:
   - stage: CI
     jobs: 
-    - job: GenerateBuildNumber
-      steps:
-        - task: UseGitVersion@5
-          inputs:
-            versionSpec: 5.x
-            useConfigFile: true
-            configFilePath: GitVersion.yml
-
-        - pwsh: Write-Output "##vso[task.setvariable variable=GITVERSION_MAJORMINORPATCH;isOutput=true]$ENV:GITVERSION_MAJORMINORPATCH"
-          name: version
-
     - job: BuildGeneric
-      dependsOn: GenerateBuildNumber
-      variables:
-        GITVERSION_MAJORMINORPATCH: $[ dependencies.GenerateBuildNumber.outputs['version.GITVERSION_MAJORMINORPATCH'] ]
       steps:
+        - task: gitversion/setup@0
+          displayName: Install GitVersion
+          inputs:
+            versionSpec: '5.x'
+
+        - task: gitversion/execute@0
+          displayName: Use GitVersion
+          inputs:
+            useConfigFile: true
+            configFilePath: 'GitVersion.yml'
+
         - task: UsePythonVersion@0
           inputs:
-            versionSpec: 3.8.7
+            versionSpec: 3.8
 
-        - pwsh: $(System.DefaultWorkingDirectory)/scripts/build.ps1
-          displayName: Build artifacts
+        - bash: |
+            pip install -r requirements.txt
+          displayName: Install Requirements
+
+        - bash: |
+            flake8 $ProjectRoot/jcat/ --max-line-length=120 --tee
+          displayName: Lint
+
+        - bash: |
+            python setup.py clean --all bdist_wheel
+          displayName: Build            
           env:
             GITVERSION_MAJORMINORPATCH: $(GITVERSION_MAJORMINORPATCH)
 
-        - task: PublishPipelineArtifact@1
+        - task: CopyFiles@2
+          displayName: Copy artifact
           inputs:
-            targetPath: $(System.DefaultWorkingDirectory)/artifacts
+            Contents: |
+              dist/*
+            TargetFolder: $(Build.ArtifactStagingDirectory)
+
+        - task: PublishPipelineArtifact@1
+          displayName: Publish
+          inputs:
+            targetPath: $(Build.ArtifactStagingDirectory)
             artifactName: publish
 
   - stage: Release
@@ -69,7 +83,7 @@ stages:
         - script: 'python -m twine upload -r pypi --config-file $(PYPIRC_PATH) "$(Pipeline.Workspace)/publish/*"'
 
         - task: GitHubRelease@1
-          displayName: Create a GitHub GitHubRelease
+          displayName: Release
           condition: 
           inputs:
             gitHubConnection: 'chelnak'
