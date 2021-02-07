@@ -23,13 +23,13 @@ pip install jcat
 ### Print a file with syntax highlighting
 
 ```PowerShell
-jcat get ./tests/terraform.tf
+jcat ./tests/terraform.tf
 ```
 
 ### Print a url with syntax highlighting
 
 ```PowerShell
-jcat get https://raw.githubusercontent.com/chelnak/jcat/master/README.md
+jcat https://raw.githubusercontent.com/chelnak/jcat/master/README.md
 ```
 
 ### List available themes
@@ -47,14 +47,14 @@ jcat lexers list
 ### Print a file with syntax highlighting and override the default theme
 
 ```PowerShell
-jcat get ./HelloWorld.ps1 --theme vs
+jcat ./HelloWorld.ps1 --theme vs
 ```
 
 ### Set the theme with an environment variable
 
 ```PowerShell
 $ENV:JCAT_THEME="vs"
-jcat get ./HelloWorld.ps1
+jcat ./HelloWorld.ps1
 ```
 
 ### Set the lexer with an environment variable
@@ -62,6 +62,16 @@ jcat get ./HelloWorld.ps1
 ```PowerShell
 $ENV:JCAT_lexer="html"
 jcat get ./HelloWorld.ps1
+```
+
+### Passthrough to stdout
+
+```PowerShell
+jcat ./HelloWorld.ps1 -passthru
+```
+
+```PowerShell
+jcat ./HelloWorld.ps1 -passthru >> output.txt
 ```
 
 ## Releasing
