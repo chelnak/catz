@@ -1,5 +1,3 @@
-[![Build Status](https://craigg.visualstudio.com/Pipelines/_apis/build/status/catz?branchName=master)](https://craigg.visualstudio.com/Pipelines/_build/latest?definitionId=24&branchName=master)
-
 # catz :pencil:
 
 A colourful syntax highlighting tool for your terminal.
