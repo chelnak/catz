@@ -50,7 +50,7 @@ def get_file(file):
 
     try:
         resolved_path = resolve_path(file)
-        with open(resolved_path, 'r') as file:
+        with open(resolved_path, encoding='utf8') as file:
             data = file.read()
             filename = file.name
         return data, filename
