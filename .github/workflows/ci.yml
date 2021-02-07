@@ -1,0 +1,88 @@
+name: catz
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v0.9.7
+      with:
+        versionSpec: '5.x'
+
+    - name: Determine Version
+      id: gitversion
+      uses: gittools/actions/gitversion/execute@v0.9.7
+      with:
+        useConfigFile: true        
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+    - name: Lint ✏️
+      run: | 
+        flake8 catz/ --max-line-length=120 --tee
+
+    - name: Install Dependencies 🚧
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r tools/requirements.txt
+
+    - name: Build 👷
+      run: |
+        python setup.py clean --all bdist_wheel sdist
+      env:
+        GITVERSION_MAJORMINORPATCH: ${{ steps.gitversion.outputs.majorMinorPatch }}    
+
+    - name: Publish 📦
+      if: startsWith(github.ref, 'refs/tags/v')
+      uses: pypa/gh-action-pypi-publish@master
+      with:
+        password: ${{ secrets.PYPI_API_TOKEN }}
+
+    - name: Create Release 🚀
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+      
+    - name: Upload Release Asset
+      uses: actions/github-script@v2
+      env:
+        release_id: ${{ steps.create_release.outputs.id }}
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          console.log('environment', process.versions);
+          
+          const fs = require('fs').promises;
+          
+          const { repo: { owner, repo }, sha } = context;
+          console.log({ owner, repo, sha });
+  
+          for (let file of await fs.readdir('./dist')) {
+            console.log('uploading', file);
+
+            await github.repos.uploadReleaseAsset({
+              owner, repo,
+              release_id: process.env.release_id,
+              name: file,
+              data: await fs.readFile(`./${file}`)
+            });            
+          }
