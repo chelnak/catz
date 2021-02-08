@@ -1,85 +1,71 @@
 import os
 import requests
-import sys
-from pathlib import Path
+import click
 from urllib import parse
-from rich.syntax import Syntax
-from rich.console import Console
+from pathlib import Path
 from pygments.lexers import (
     get_lexer_for_filename,
     ClassNotFound,
-    get_lexer_by_name
+    get_lexer_by_name, get_lexer_for_mimetype
 )
 
 
-console = Console()
+def is_url(input):
+    url = parse.urlparse(input)
+    if url.scheme:
+        return True
 
 
-def resolve_path(path):
-    # Handle file paths
-    if path.startswith('~'):
-        return os.path.expanduser(path)
-    else:
-        return Path(path).resolve()
-
-
-def get_url(url):
+def get_content_from_url(url):
 
     VALID_PROTOCOLS = ['http', 'https']
-    VALID_STATUS_CODES = [200]
 
     parsed_url = parse.urlparse(url)
 
     if parsed_url.scheme not in VALID_PROTOCOLS:
-        console.print('{0} is not a valid protocol'.format(parsed_url.scheme), style='red')
-        sys.exit(1)
-
-    r = requests.get(url)
-
-    if r.status_code not in VALID_STATUS_CODES:
-        console.print('Request failed!\n{0}'.format(r.text), style='red')
-        sys.exit(1)
-
-    data = r.text
-    filename = parse.urlsplit(url).path.split('/')[-1]
-
-    return data, filename
-
-
-def get_file(file):
+        raise click.ClickException(f'{parsed_url.scheme} is not a valid http protocol.')
 
     try:
-        resolved_path = resolve_path(file)
+        response = requests.get(url)
+        mime_type = response.headers['content-type'].split(';')
+        response.raise_for_status()
+        return response.text, mime_type
+    except requests.exceptions.RequestException as e:
+        raise click.ClickException(e)
+
+
+def get_content_from_file(file):
+
+    try:
+
+        resolved_path = os.path.expanduser(file) if file.startswith('~') else Path(file).resolve()
+
         with open(resolved_path, encoding='utf8') as file:
             data = file.read()
             filename = file.name
+
         return data, filename
 
     except FileNotFoundError:
-        console.print_exception()
-        exit(1)
+        raise click.ClickException(f'FileNotFound: {file}')
 
 
-def write_output(data, lexer_name, theme):
-
-    syntax = Syntax(data,
-                    lexer_name,
-                    theme=theme,
-                    line_numbers=True)
-    console.print(syntax)
-
-
-def get_lexer_from_filename(name):
+def get_lexer_from_mimetype(mimetype):
 
     try:
-        lexer = get_lexer_for_filename(name)
+        lexer = get_lexer_for_mimetype(mimetype)
         return lexer.name
     except ClassNotFound:
-        console.print(
-            'WARNING: Could not determine correct lexer for this file!',
-            style='yellow'
-        )
-        return ''
+        pass
+
+
+def get_lexer_from_filename(filename):
+
+    try:
+        lexer = get_lexer_for_filename(filename)
+        return lexer.name
+    except ClassNotFound:
+        pass
 
 
 def get_lexer_from_name(name):
@@ -88,8 +74,4 @@ def get_lexer_from_name(name):
         lexer = get_lexer_by_name(name)
         return lexer.name
     except ClassNotFound:
-        console.print(
-            'WARNING: Could not determine correct lexer for {0}!'.format(name),
-            style='yellow'
-        )
-        return ''
+        pass
