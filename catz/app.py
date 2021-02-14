@@ -3,7 +3,7 @@ import click
 from click_default_group import DefaultGroup
 
 
-from commands import (
+from .commands import (
     get_content,
     list_lexers,
     list_themes,
