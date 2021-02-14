@@ -13,7 +13,8 @@ from .command_helpers import (
 
 
 @click.command(name='get',
-               help='Perform syntax highlighting on raw text from a local file or a url.'
+               help='Perform syntax highlighting on raw text from a local file or a url.',
+               no_args_is_help=True
                )
 @click.argument('path')
 @click.option('--theme',

@@ -18,12 +18,12 @@ jobs:
       with:
         fetch-depth: 0    
 
-    - name: Install GitVersion
+    - name: Install GitVersion 🔨
       uses: gittools/actions/gitversion/setup@v0.9.7
       with:
         versionSpec: '5.x'
 
-    - name: Determine Version
+    - name: Determine Version 📝
       id: gitversion
       uses: gittools/actions/gitversion/execute@v0.9.7
       with:
@@ -42,6 +42,10 @@ jobs:
     - name: Lint ✏️
       run: | 
         python -m flake8 catz/ --max-line-length=120 --tee
+
+    - name: Test ✅
+      run: |
+        python -m unittest discover -s tests/ -v
 
     - name: Build 👷
       run: |
