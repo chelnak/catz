@@ -40,7 +40,7 @@ def get_content_from_file(file):
 
         resolved_path = os.path.expanduser(file) if file.startswith('~') else Path(file).resolve()
 
-        with open(resolved_path, encoding='utf8') as file:
+        with open(resolved_path, encoding='latin-1', errors='backslashreplace') as file:
             data = file.read()
             filename = file.name
 
@@ -48,6 +48,9 @@ def get_content_from_file(file):
 
     except FileNotFoundError:
         raise click.ClickException(f'FileNotFound: {file}')
+
+    except UnicodeEncodeError as e:
+        raise click.ClickException(f'An error occured while encoding the file: {e}')
 
 
 def get_lexer_from_mimetype(mimetype):
