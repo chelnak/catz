@@ -37,11 +37,6 @@ class TestGetContentFile(unittest.TestCase):
         assert 'FileNotFound' in result.output
 
     def test_it_should_return_expected_content(self):
-        """
-        Sees windows path as URL
-            ➜ catz C:\\Users\\craig\\code\\catz\\tests\\files\\json_utf8.json
-            Error: c is not a valid http protocol
-        """
         result = RUNNER.invoke(get_content.get, [join(
             TESTS_ROOT, 'files', 'json_utf8.json')])
         self.assertEqual(result.exit_code, 0)
