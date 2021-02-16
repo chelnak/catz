@@ -16,7 +16,7 @@ setup(
     author='chelnak',
     description='A colourful syntax highlighting tool for your terminal.',
     url='https://github.com/chelnak/catz',
-    packages=['catz.commands'],
+    packages=['catz', 'catz.commands'],
     entry_points={
         'console_scripts': ['catz = catz.app:cli']
     },
