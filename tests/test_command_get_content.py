@@ -78,7 +78,8 @@ class TestGetContentUrl(unittest.TestCase):
         self.assertEqual(result.exit_code, 1)
         assert 'Error: HTTP Error 404: Not Found' in result.output
 
-    def test_it_should_fail_when_invalid_protocol(self):
+    @patch('catz.commands.command_helpers.urllib.request.urlopen')
+    def test_it_should_fail_when_invalid_protocol(self, mock_urllib):
 
         url = VALID_URL.replace('https', 'ftp')
         result = self.runner.invoke(catz.commands.get, [url], obj=Console())
@@ -103,6 +104,33 @@ class TestGetContentUrl(unittest.TestCase):
     def tearDown(self):
         self.runner = None
 
+
+class TestLineHighlighting(unittest.TestCase):
+
+    def setUp(self):
+        self.runner = CliRunner()
+
+    def test_highlight_accepts_a_single_value(self):
+        result = self.runner.invoke(catz.commands.get, [join(
+            TESTS_ROOT, 'files', 'json_utf8.json'), '--highlight', '1'], obj=Console())
+
+        self.assertIn('❱ 1', result.output)
+        self.assertEqual(result.exit_code, 0)
+
+    def test_highlight_accepts_a_csv_of_values(self):
+        result = self.runner.invoke(catz.commands.get, [join(
+            TESTS_ROOT, 'files', 'json_utf8.json'), '--highlight', '1,2,3'], obj=Console())
+        print(result.output)
+        self.assertIn('❱ 1', result.output)
+        self.assertIn('❱ 2', result.output)
+        self.assertIn('❱ 3', result.output)
+        self.assertEqual(result.exit_code, 0)
+
+    def test_highlight_fails_for_invalid_input(self):
+        result = self.runner.invoke(catz.commands.get, [join(
+            TESTS_ROOT, 'files', 'json_utf8.json'), '--highlight', '1x'], obj=Console())
+
+        self.assertEqual(result.output.strip(), 'Error: Invalid value for --highlight / -hl: invalid literal for int() with base 10: \'1x\' is not a valid integer')
 
 if __name__ == '__main__':
     unittest.main()
