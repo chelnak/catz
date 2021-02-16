@@ -1,7 +1,6 @@
 import sys
 import click
 from rich.syntax import Syntax
-from rich.console import Console
 from .command_helpers import (
     get_lexer_from_filename,
     get_lexer_from_mimetype,
@@ -37,17 +36,16 @@ from .command_helpers import (
               envvar='CATZ_PASSTHRU',
               help='''Pass the content of the file directly to stdout with no lexer applied.'''
               )
-def get(path, theme, lexer, passthru):
+@click.pass_obj
+def get(console, path, theme, lexer, passthru):
 
     data, lexer_identifier = get_content_from_url(
         path) if is_url(path) else get_content_from_file(path)
 
     if passthru:
         print(data, file=sys.stdout)
-        return
+    else:
+        lexer_name = get_lexer_from_name(lexer) if lexer is not None else get_lexer_from_mimetype(
+            lexer_identifier) if is_url(path) else get_lexer_from_filename(lexer_identifier)
 
-    lexer_name = get_lexer_from_name(lexer) if lexer is not None else get_lexer_from_mimetype(
-        lexer_identifier) if is_url(path) else get_lexer_from_filename(lexer_identifier)
-
-    console = Console()
-    console.print(Syntax(data, lexer_name, theme=theme, line_numbers=True))
+        console.print(Syntax(data, lexer_name, theme=theme, line_numbers=True))
