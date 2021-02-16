@@ -48,4 +48,4 @@ def get(console, path, theme, lexer, passthru):
         lexer_name = get_lexer_from_name(lexer) if lexer is not None else get_lexer_from_mimetype(
             lexer_identifier) if is_url(path) else get_lexer_from_filename(lexer_identifier)
 
-        console.print(Syntax(data, lexer_name, theme=theme, line_numbers=True))
+        console.print(Syntax(code=data, lexer_name=lexer_name, theme=theme, line_numbers=True))

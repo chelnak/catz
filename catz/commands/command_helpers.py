@@ -12,16 +12,21 @@ from pygments.lexers import (
 
 
 def is_url(input):
-    VALID_PROTOCOLS = ['http', 'https']
     url = parse.urlparse(input)
-    if url.scheme in VALID_PROTOCOLS:
+    if url.netloc and url.scheme:
         return True
 
 
 def get_content_from_url(url):
+
+    VALID_PROTOCOLS = ['http', 'https']
+    p = parse.urlparse(url).scheme
+    if p not in VALID_PROTOCOLS:
+        raise click.ClickException(f'{p} is not a valid http protocol.')
+
     try:
         with request.urlopen(url) as conn:
-            content = conn.read().decode()
+            content = conn.read().decode('utf-8')
             mime_type = conn.headers['content-type'].split(';')
             return content, mime_type
     except urllib.error.HTTPError as e:
