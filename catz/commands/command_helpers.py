@@ -1,7 +1,8 @@
 import os
-import requests
+import urllib
 import click
-from urllib import parse
+from urllib import parse, request
+
 from pathlib import Path
 from pygments.lexers import (
     get_lexer_for_filename,
@@ -12,25 +13,23 @@ from pygments.lexers import (
 
 def is_url(input):
     url = parse.urlparse(input)
-    if url.scheme:
+    if url.netloc and url.scheme:
         return True
 
 
 def get_content_from_url(url):
 
     VALID_PROTOCOLS = ['http', 'https']
-
-    parsed_url = parse.urlparse(url)
-
-    if parsed_url.scheme not in VALID_PROTOCOLS:
-        raise click.ClickException(f'{parsed_url.scheme} is not a valid http protocol.')
+    p = parse.urlparse(url).scheme
+    if p not in VALID_PROTOCOLS:
+        raise click.ClickException(f'{p} is not a valid http protocol.')
 
     try:
-        response = requests.get(url)
-        mime_type = response.headers['content-type'].split(';')
-        response.raise_for_status()
-        return response.text, mime_type
-    except requests.exceptions.RequestException as e:
+        with request.urlopen(url) as conn:
+            content = conn.read().decode('utf-8')
+            mime_type = conn.headers['content-type'].split(';')
+            return content, mime_type
+    except urllib.error.HTTPError as e:
         raise click.ClickException(e)
 
 
@@ -45,6 +44,9 @@ def get_content_from_file(file):
             filename = file.name
 
         return data, filename
+
+    except OSError as e:
+        raise click.ClickException(f'OSError: {e}')
 
     except FileNotFoundError:
         raise click.ClickException(f'FileNotFound: {file}')

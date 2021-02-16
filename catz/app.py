@@ -1,27 +1,20 @@
 
 import click
+from rich.console import Console
 from click_default_group import DefaultGroup
-
-
-from .commands import (
-    get_content,
-    list_lexers,
-    list_themes,
-    get_version
-)
+from . import commands
 
 
 @click.group(cls=DefaultGroup, default='get', default_if_no_args=True)
 @click.pass_context
 def cli(ctx):
-    pass
+    ctx.obj = Console()
 
 
-cli.add_command(get_content.get)
-cli.add_command(list_lexers.lexers_group)
-cli.add_command(list_themes.themes_group)
-cli.add_command(get_version.version)
+# Root commands
+cli.add_command(commands.get)
+cli.add_command(commands.version)
 
-
-if __name__ == '__main__':
-    cli()
+# Groups
+cli.add_command(commands.lexers_group)
+cli.add_command(commands.themes_group)
