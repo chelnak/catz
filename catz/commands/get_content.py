@@ -30,6 +30,13 @@ from .command_helpers import (
               help='''Override the lexer used when applying syntax highlighting.
               You can use catz lexers list to view a list of available lexers.'''
               )
+@click.option('--highlight',
+              '-hl',
+              default=None,
+              help='''Highlight specific lines in the parsed file.
+              Accepts a comma separated list of line numbers.
+              '''
+              )
 @click.option('--passthru',
               '-p',
               is_flag=True,
@@ -37,7 +44,7 @@ from .command_helpers import (
               help='''Pass the content of the file directly to stdout with no lexer applied.'''
               )
 @click.pass_obj
-def get(console, path, theme, lexer, passthru):
+def get(console, path, theme, lexer, highlight, passthru):
 
     data, lexer_identifier = get_content_from_url(
         path) if is_url(path) else get_content_from_file(path)
@@ -48,4 +55,20 @@ def get(console, path, theme, lexer, passthru):
         lexer_name = get_lexer_from_name(lexer) if lexer is not None else get_lexer_from_mimetype(
             lexer_identifier) if is_url(path) else get_lexer_from_filename(lexer_identifier)
 
-        console.print(Syntax(code=data, lexer_name=lexer_name, theme=theme, line_numbers=True))
+        syntax_params = dict(
+            code=data,
+            lexer_name=lexer_name,
+            theme=theme,
+            line_numbers=True
+        )
+
+        if highlight is not None:
+
+            try:
+                values = highlight.split(',')
+                mapped = map(int, values)
+                syntax_params['highlight_lines'] = set(mapped)
+            except ValueError as e:
+                raise click.ClickException(f'Invalid value for --highlight / -hl: {e} is not a valid integer')
+
+        console.print(Syntax(**syntax_params))
