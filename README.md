@@ -18,31 +18,19 @@ pip install catz
 
 ## Usage
 
-### Print a file with syntax highlighting
+File content syntax highlighting
 
 ```PowerShell
 catz ./tests/terraform.tf
 ```
 
-### Print a url with syntax highlighting
+### Url content syntax highlighting
 
 ```PowerShell
 catz https://raw.githubusercontent.com/chelnak/catz/master/README.md
 ```
 
-### List available themes
-
-```PowerShell
-catz themes list
-```
-
-### List available lexers
-
-```PowerShell
-catz lexers list
-```
-
-### Print a file with syntax highlighting and override the default theme
+### Override the default theme
 
 ```PowerShell
 catz ./HelloWorld.ps1 --theme vs
@@ -58,11 +46,11 @@ catz ./HelloWorld.ps1
 ### Set the lexer with an environment variable
 
 ```PowerShell
-$ENV:CATZ_lexer="html"
+$ENV:CATZ_LEXER="html"
 catz get ./HelloWorld.ps1
 ```
 
-### Passthrough to stdout
+### Passthrough
 
 ```PowerShell
 catz ./HelloWorld.ps1 --passthru
@@ -70,6 +58,42 @@ catz ./HelloWorld.ps1 --passthru
 
 ```PowerShell
 catz ./HelloWorld.ps1 --passthru >> output.txt
+```
+
+### Line highlighting
+
+Highlight individual lines
+
+```PowerShell
+catz ./HelloWorld.ps1 --highlight 1,4
+```
+
+Highlight a range of lines
+
+```PowerShell
+catz ./HelloWorld.ps1 -highlight 1-4
+```
+
+### List available themes
+
+```PowerShell
+catz themes list
+```
+
+### Display examples of available themes
+
+```PowerShell
+catz themes show
+```
+
+```PowerShell
+catz themes show --name vim
+```
+
+### List available lexers
+
+```PowerShell
+catz lexers list
 ```
 
 ## Releasing

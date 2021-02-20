@@ -129,8 +129,23 @@ class TestLineHighlighting(unittest.TestCase):
     def test_highlight_fails_for_invalid_input(self):
         result = self.runner.invoke(catz.commands.get, [join(
             TESTS_ROOT, 'files', 'json_utf8.json'), '--highlight', '1x'], obj=Console())
+        self.assertEqual(result.output.strip(), 'Error: Invalid value for --highlight / -hl: invalid literal for int() with base 10: \'1x\' is not a valid integer range')
 
-        self.assertEqual(result.output.strip(), 'Error: Invalid value for --highlight / -hl: invalid literal for int() with base 10: \'1x\' is not a valid integer')
+    def test_highlight_fails_for_invalid_range_input(self):
+        result = self.runner.invoke(catz.commands.get, [join(
+            TESTS_ROOT, 'files', 'json_utf8.json'), '--highlight', '1-z'], obj=Console())
+        self.assertEqual(result.output.strip(), 'Error: Invalid value for --highlight / -hl: invalid literal for int() with base 10: \'z\' is not a valid integer range')
+
+    def test_higlight_accepts_a_range_of_values(self):
+        result = self.runner.invoke(catz.commands.get, [join(
+            TESTS_ROOT, 'files', 'json_utf8.json'), '--highlight', '1-10'], obj=Console())
+        self.assertEqual(result.exit_code, 0)
+
+    def test_highlight_fails_when_range_position_0_is_greater_than_1(self):
+        result = self.runner.invoke(catz.commands.get, [join(
+            TESTS_ROOT, 'files', 'json_utf8.json'), '--highlight', '10-1'], obj=Console())
+        self.assertEqual(result.output.strip(), 'Error: Invalid value for --highlight / -hl: 10 is greater than 1')
+
 
 if __name__ == '__main__':
     unittest.main()
