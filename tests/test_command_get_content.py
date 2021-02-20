@@ -144,7 +144,7 @@ class TestLineHighlighting(unittest.TestCase):
     def test_highlight_fails_when_range_position_0_is_greater_than_1(self):
         result = self.runner.invoke(catz.commands.get, [join(
             TESTS_ROOT, 'files', 'json_utf8.json'), '--highlight', '10-1'], obj=Console())
-        self.assertEqual(result.output.strip(), 'Error: Invalid value for --highlight / -hl: Position 0 cannot be greater than position 1: 10 > 1')
+        self.assertEqual(result.output.strip(), 'Error: Invalid value for --highlight / -hl: 10 is greater than 1')
 
 
 if __name__ == '__main__':
