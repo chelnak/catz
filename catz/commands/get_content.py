@@ -64,18 +64,20 @@ def get(console, path, theme, lexer, highlight, passthru):
 
         if highlight is not None:
 
+            highlight_exception_base = 'Invalid value for --highlight / -hl:'
+
             # Move this to a custom override class for option
             try:
                 if '-' in highlight:
                     input_list = highlight.split('-')
                     if len(input_list) > 2:
                         raise click.ClickException(
-                            f'Invalid value for --highlight / -hl: Could not convert {highlight} to a valid range')
+                            f'{highlight_exception_base} Could not convert {highlight} to a valid range')
 
                     input_list = list(map(int, input_list))
                     if input_list[0] > input_list[1]:
                         raise click.ClickException(
-                            f'Invalid value for --highlight / -hl: Position 0 cannot be greater than position 1: {input_list[0]} > {input_list[1]}')
+                            f'{highlight_exception_base} {input_list[0]} is greater than {input_list[1]}')
 
                     values = range(input_list[0], input_list[1]+1)
                     print(input_list)
@@ -87,6 +89,6 @@ def get(console, path, theme, lexer, highlight, passthru):
                 syntax_params['highlight_lines'] = set(values)
             except ValueError as e:
                 raise click.ClickException(
-                    f'Invalid value for --highlight / -hl: {e} is not a valid integer range')
+                    f'{highlight_exception_base} {e} is not a valid integer range')
 
         console.print(Syntax(**syntax_params))
