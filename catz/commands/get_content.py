@@ -80,7 +80,6 @@ def get(console, path, theme, lexer, highlight, passthru):
                             f'{highlight_exception_base} {input_list[0]} is greater than {input_list[1]}')
 
                     values = range(input_list[0], input_list[1]+1)
-                    print(input_list)
                     if len(values) == 0:
                         values = map(int, input_list[0])
                 else:
