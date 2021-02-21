@@ -146,6 +146,11 @@ class TestLineHighlighting(unittest.TestCase):
             TESTS_ROOT, 'files', 'json_utf8.json'), '--highlight', '10-1'], obj=Console())
         self.assertEqual(result.output.strip(), 'Error: Invalid value for --highlight / -hl: 10 is greater than 1')
 
+    def test_highlight_fails_when_range_contains_more_than_two_values(self):
+        result = self.runner.invoke(catz.commands.get, [join(
+            TESTS_ROOT, 'files', 'json_utf8.json'), '--highlight', '10-11-12'], obj=Console())
+        self.assertEqual(result.output.strip(), 'Error: Invalid value for --highlight / -hl: Could not convert 10-11-12 to a valid range')
+
 
 if __name__ == '__main__':
     unittest.main()
