@@ -12,7 +12,12 @@ from .command_helpers import (
 
 
 class HandleRangeInput(click.Option):
+    """
+    Override to handle different types of line number inputs for
+    --highlight / -hl.
 
+    Accepts a csv of numbers (1,2,6) or a range (1-6).
+    """
     def consume_value(self, ctx, opts):
         value = super().consume_value(ctx, opts)
         highlight_exception_base = 'Invalid value for --highlight / -hl:'
