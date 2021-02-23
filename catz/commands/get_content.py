@@ -107,7 +107,6 @@ def get(console, path, theme, lexer, highlight, passthru):
         )
 
         if highlight is not None:
-            print(highlight)
             syntax_params['highlight_lines'] = set(highlight)
 
         console.print(Syntax(**syntax_params))
