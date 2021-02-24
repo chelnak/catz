@@ -11,6 +11,49 @@ from .command_helpers import (
 )
 
 
+class HandleRangeInput(click.Option):
+    """
+    Override to handle different types of line number inputs for
+    --highlight / -hl.
+
+    Accepts a csv of numbers (1,2,6) or a range (1-6).
+    """
+    def consume_value(self, ctx, opts):
+        value = super().consume_value(ctx, opts)
+        highlight_exception_base = 'Invalid value for --highlight / -hl:'
+
+        if value is not None:
+
+            try:
+
+                if '-' in value:
+                    input_list = value.split('-')
+
+                    if len(input_list) > 2:
+                        raise click.ClickException(
+                            f'{highlight_exception_base} Could not convert {value} to a valid range')
+
+                    input_list = list(map(int, input_list))
+
+                    if input_list[0] > input_list[1]:
+                        raise click.ClickException(
+                            f'{highlight_exception_base} {input_list[0]} is greater than {input_list[1]}')
+
+                    value = list(range(input_list[0], input_list[1]+1))
+
+                    if len(value) == 0:
+                        value = input_list[0]
+
+                else:
+                    value = list(map(int, value.split(',')))
+
+            except ValueError as e:
+                raise click.ClickException(
+                    f'{highlight_exception_base} {e} is not a valid integer range')
+
+        return value
+
+
 @click.command(name='get',
                help='Perform syntax highlighting on raw text from a local file or a url.',
                no_args_is_help=True
@@ -33,6 +76,7 @@ from .command_helpers import (
 @click.option('--highlight',
               '-hl',
               default=None,
+              cls=HandleRangeInput,
               help='''Highlight specific lines in the parsed file.
               Accepts a comma separated list of line numbers.
               '''
@@ -63,31 +107,6 @@ def get(console, path, theme, lexer, highlight, passthru):
         )
 
         if highlight is not None:
-
-            highlight_exception_base = 'Invalid value for --highlight / -hl:'
-
-            # Move this to a custom override class for option
-            try:
-                if '-' in highlight:
-                    input_list = highlight.split('-')
-                    if len(input_list) > 2:
-                        raise click.ClickException(
-                            f'{highlight_exception_base} Could not convert {highlight} to a valid range')
-
-                    input_list = list(map(int, input_list))
-                    if input_list[0] > input_list[1]:
-                        raise click.ClickException(
-                            f'{highlight_exception_base} {input_list[0]} is greater than {input_list[1]}')
-
-                    values = range(input_list[0], input_list[1]+1)
-                    if len(values) == 0:
-                        values = map(int, input_list[0])
-                else:
-                    values = map(int, highlight.split(','))
-
-                syntax_params['highlight_lines'] = set(values)
-            except ValueError as e:
-                raise click.ClickException(
-                    f'{highlight_exception_base} {e} is not a valid integer range')
+            syntax_params['highlight_lines'] = set(highlight)
 
         console.print(Syntax(**syntax_params))
