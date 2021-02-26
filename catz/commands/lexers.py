@@ -1,25 +1,17 @@
 import click
 from rich.console import Console
 from rich.table import Table
-from pygments.lexers import (
-    get_all_lexers
-)
+from pygments.lexers import get_all_lexers
 
-
-console = Console()
-
-
-def flatten(t):
-    return ','.join([x for x in t])
-
+from .util import flatten
 
 @click.group(name='lexers', help='Commands for working with lexers.')
 def lexers_group():
     pass
 
-
 @lexers_group.command(name='list', help='List all available lexers.')
-def list_lexers():
+@click.pass_obj
+def list_lexers(coneole):
 
     lexers = get_all_lexers()
 

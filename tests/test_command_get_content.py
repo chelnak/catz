@@ -3,7 +3,7 @@ import urllib
 from unittest.mock import patch, MagicMock
 from os.path import dirname, join, realpath
 import catz.commands
-import catz.commands.command_helpers
+import catz.commands.util
 from rich.console import Console
 from click.testing import CliRunner
 import warnings
@@ -19,7 +19,7 @@ MOCK_HTTP_RESPONSE = '{"test": "file"}'
 MOCK_CATZ_RESPONSE = '1 {"test": "file"}'
 
 
-class TestGetContentCommand(unittest.TestCase):
+class TestWhenExecutingTheBaseCommand(unittest.TestCase):
 
     def setUp(self):
         self.runner = CliRunner()
@@ -37,7 +37,7 @@ class TestGetContentCommand(unittest.TestCase):
         self.runner = None
 
 
-class TestGetContentFile(unittest.TestCase):
+class TestWhenExecutingWithAFileAsInput(unittest.TestCase):
 
     def setUp(self):
         self.runner = CliRunner()
@@ -62,12 +62,12 @@ class TestGetContentFile(unittest.TestCase):
         self.runner = None
 
 
-class TestGetContentUrl(unittest.TestCase):
+class TestWhenExecutingWithAUrlAsInput(unittest.TestCase):
 
     def setUp(self):
         self.runner = CliRunner()
 
-    @patch('catz.commands.command_helpers.get_content_from_url')
+    @patch('catz.commands.util.get_content_from_url')
     def test_it_should_fail_on_http_error(self, mock_urllib):
 
         mock = mock_urllib.return_value
@@ -78,7 +78,7 @@ class TestGetContentUrl(unittest.TestCase):
         self.assertEqual(result.exit_code, 1)
         assert 'Error: HTTP Error 404: Not Found' in result.output
 
-    @patch('catz.commands.command_helpers.urllib.request.urlopen')
+    @patch('catz.commands.util.urllib.request.urlopen')
     def test_it_should_fail_when_invalid_protocol(self, mock_urllib):
 
         url = VALID_URL.replace('https', 'ftp')
@@ -86,7 +86,7 @@ class TestGetContentUrl(unittest.TestCase):
         self.assertEqual(result.exit_code, 1)
         self.assertEqual(result.output.strip(), 'Error: ftp is not a valid http protocol.')
 
-    @patch('catz.commands.command_helpers.urllib.request.urlopen')
+    @patch('catz.commands.util.urllib.request.urlopen')
     def test_it_should_return_expected_content(self, mock_urlopen):
         warnings.filterwarnings("ignore", category=DeprecationWarning)
 
@@ -105,7 +105,7 @@ class TestGetContentUrl(unittest.TestCase):
         self.runner = None
 
 
-class TestLineHighlighting(unittest.TestCase):
+class TestWhenHighlightingLines(unittest.TestCase):
 
     def setUp(self):
         self.runner = CliRunner()

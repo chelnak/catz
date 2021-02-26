@@ -3,7 +3,6 @@ from rich.syntax import Syntax
 from rich.table import Table
 from pygments.styles import get_all_styles
 
-
 @click.group(name='themes', help='Commands for working with themes.')
 def themes_group():
     pass
