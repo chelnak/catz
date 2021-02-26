@@ -2,12 +2,13 @@ import click
 from rich.console import Console
 from rich.table import Table
 from pygments.lexers import get_all_lexers
-
 from .util import flatten
+
 
 @click.group(name='lexers', help='Commands for working with lexers.')
 def lexers_group():
     pass
+
 
 @lexers_group.command(name='list', help='List all available lexers.')
 @click.pass_obj
