@@ -1,9 +1,7 @@
 import sys
 import click
 from rich.syntax import Syntax
-from .command_helpers import (
-    get_lexer_from_filename,
-    get_lexer_from_mimetype,
+from .util import (
     get_lexer_from_name,
     get_content_from_url,
     get_content_from_file,
@@ -90,23 +88,24 @@ class HandleRangeInput(click.Option):
 @click.pass_obj
 def get(console, path, theme, lexer, highlight, passthru):
 
-    data, lexer_identifier = get_content_from_url(
+    data, lexer_name = get_content_from_url(
         path) if is_url(path) else get_content_from_file(path)
 
     if passthru:
         print(data, file=sys.stdout)
-    else:
-        lexer_name = get_lexer_from_name(lexer) if lexer is not None else get_lexer_from_mimetype(
-            lexer_identifier) if is_url(path) else get_lexer_from_filename(lexer_identifier)
+        return
 
-        syntax_params = dict(
-            code=data,
-            lexer_name=lexer_name,
-            theme=theme,
-            line_numbers=True
-        )
+    if lexer is not None:
+        lexer_name = get_lexer_from_name(lexer)
 
-        if highlight is not None:
-            syntax_params['highlight_lines'] = set(highlight)
+    syntax_params = dict(
+        code=data,
+        lexer_name=lexer_name,
+        theme=theme,
+        line_numbers=True
+    )
 
-        console.print(Syntax(**syntax_params))
+    if highlight is not None:
+        syntax_params['highlight_lines'] = set(highlight)
+
+    console.print(Syntax(**syntax_params))

@@ -16,5 +16,5 @@ cli.add_command(commands.get)
 cli.add_command(commands.version)
 
 # Groups
-cli.add_command(commands.lexers_group)
-cli.add_command(commands.themes_group)
+cli.add_command(commands.lexers)
+cli.add_command(commands.themes)
