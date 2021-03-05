@@ -2,6 +2,7 @@ import click
 import difflib
 from rich.syntax import Syntax
 
+
 @click.command(name='diff',
                help='Get the diff between two files.',
                no_args_is_help=True
