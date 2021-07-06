@@ -12,7 +12,7 @@ A colourful syntax highlighting tool for your terminal.
 
 Install the latest release from the Releases page or run the following:
 
-```PowerShell
+```bash
 pip install catz
 ```
 
@@ -20,43 +20,23 @@ pip install catz
 
 File content syntax highlighting
 
-```PowerShell
+```bash
 catz ./tests/terraform.tf
-```
-
-### Url content syntax highlighting
-
-```PowerShell
-catz https://raw.githubusercontent.com/chelnak/catz/master/README.md
 ```
 
 ### Override the default theme
 
-```PowerShell
+```bash
 catz ./HelloWorld.ps1 --theme vs
-```
-
-### Set the theme with an environment variable
-
-```PowerShell
-$ENV:CATZ_THEME="vs"
-catz ./HelloWorld.ps1
-```
-
-### Set the lexer with an environment variable
-
-```PowerShell
-$ENV:CATZ_LEXER="html"
-catz get ./HelloWorld.ps1
 ```
 
 ### Passthrough
 
-```PowerShell
+```bash
 catz ./HelloWorld.ps1 --passthru
 ```
 
-```PowerShell
+```bash
 catz ./HelloWorld.ps1 --passthru >> output.txt
 ```
 
@@ -64,35 +44,35 @@ catz ./HelloWorld.ps1 --passthru >> output.txt
 
 Highlight individual lines
 
-```PowerShell
+```bash
 catz ./HelloWorld.ps1 --highlight 1,4
 ```
 
 Highlight a range of lines
 
-```PowerShell
+```bash
 catz ./HelloWorld.ps1 -highlight 1-4
 ```
 
 ### List available themes
 
-```PowerShell
+```bash
 catz themes list
 ```
 
 ### Display examples of available themes
 
-```PowerShell
+```bash
 catz themes show
 ```
 
-```PowerShell
+```bash
 catz themes show --name vim
 ```
 
 ### List available lexers
 
-```PowerShell
+```bash
 catz lexers list
 ```
 
