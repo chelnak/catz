@@ -1,5 +1,4 @@
 import sys
-from typing import Type
 import click
 from rich.syntax import Syntax
 from .util import (
