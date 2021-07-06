@@ -1,8 +1,3 @@
-import os
-import urllib
-import click
-from urllib import parse, request
-from pathlib import Path
 from pygments.lexers import (
     get_lexer_for_filename,
     get_lexer_by_name,
