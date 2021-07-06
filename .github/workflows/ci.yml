@@ -73,7 +73,6 @@ jobs:
       id: create_release
       uses: ncipollo/release-action@v1
       with:
-        tag: ${{ github.ref }}
-        name: Release ${{ github.ref }}
+        name: catz
         body: ${{steps.build_changelog.outputs.changelog}}
         token: ${{ secrets.GITHUB_TOKEN }}
