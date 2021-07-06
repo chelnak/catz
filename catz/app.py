@@ -13,7 +13,6 @@ def cli(ctx):
 
 # Root commands
 cli.add_command(commands.get)
-cli.add_command(commands.diff)
 cli.add_command(commands.version)
 
 # Groups
