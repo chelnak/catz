@@ -103,7 +103,8 @@ def get(console, file, theme, lexer, highlight, passthru):
         'code': data,
         'lexer_name': _lexer,
         'theme': theme,
-        'line_numbers': True
+        'line_numbers': True,
+        'background_color': 'default'
     }
 
     if highlight is not None:
