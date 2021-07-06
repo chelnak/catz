@@ -1,11 +1,10 @@
 import sys
+from typing import Type
 import click
 from rich.syntax import Syntax
 from .util import (
-    get_lexer_from_name,
-    get_content_from_url,
-    get_content_from_file,
-    is_url
+    get_lexer_from_filename,
+    get_lexer_from_name
 )
 
 
@@ -53,10 +52,10 @@ class HandleRangeInput(click.Option):
 
 
 @click.command(name='get',
-               help='Perform syntax highlighting on raw text from a local file or a url.',
+               help='Perform syntax highlighting on raw text from a local file.',
                no_args_is_help=True
                )
-@click.argument('path')
+@click.argument('file', type=click.File(mode='r', encoding='utf-8', errors='ignore'), default=sys.stdin)
 @click.option('--theme',
               '-t',
               default='native',
@@ -86,24 +85,27 @@ class HandleRangeInput(click.Option):
               help='''Pass the content of the file directly to stdout with no lexer applied.'''
               )
 @click.pass_obj
-def get(console, path, theme, lexer, highlight, passthru):
+def get(console, file, theme, lexer, highlight, passthru):
 
-    data, lexer_name = get_content_from_url(
-        path) if is_url(path) else get_content_from_file(path)
+    data = file.read()
 
     if passthru:
         print(data, file=sys.stdout)
         return
 
-    if lexer is not None:
-        lexer_name = get_lexer_from_name(lexer)
+    filename = file.name
 
-    syntax_params = dict(
-        code=data,
-        lexer_name=lexer_name,
-        theme=theme,
-        line_numbers=True
-    )
+    if lexer is None:
+        _lexer = get_lexer_from_filename(filename)
+    else:
+        _lexer = get_lexer_from_name(lexer)
+
+    syntax_params = {
+        'code': data,
+        'lexer_name': _lexer,
+        'theme': theme,
+        'line_numbers': True
+    }
 
     if highlight is not None:
         syntax_params['highlight_lines'] = set(highlight)
