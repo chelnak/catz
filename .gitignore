@@ -132,3 +132,5 @@ dmypy.json
 *.wixobj
 **/artifacts
 .vscode
+
+.DS_Store
