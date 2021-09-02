@@ -1,4 +1,5 @@
 import unittest
+from mock import patch
 from os.path import dirname, join, realpath
 import catz.commands
 import catz.commands.util
@@ -51,22 +52,46 @@ class TestWhenExecutingWithAFileAsInput(unittest.TestCase):
     def tearDown(self):
         self.runner = None
 
+
+class TestWhenOutputIsRedirected(unittest.TestCase):
+
+    def setUp(self):
+        self.runner = CliRunner()
+
+    @patch('catz.commands.get_content.click.get_text_stream')
+    def test_it_does_not_apply_style_when_isatty_is_true(self, mock_get_text_stream):
+        mock_get_text_stream.isatty.return_value = True
+
+        result = self.runner.invoke(catz.commands.get, [join(
+            TESTS_ROOT, 'files', 'json_utf8.json'), '--highlight', '1'], obj=Console())
+
+        self.assertIn('1', result.output)
+        self.assertEqual(result.exit_code, 0)
+
+
 class TestWhenHighlightingLines(unittest.TestCase):
 
     def setUp(self):
         self.runner = CliRunner()
 
-    def test_highlight_accepts_a_single_value(self):
+    @patch('catz.commands.get_content.click.get_text_stream')
+    def test_highlight_accepts_a_single_value(self, mock_get_text_stream):
+        mock_get_text_stream.isatty.return_value = False
         result = self.runner.invoke(catz.commands.get, [join(
             TESTS_ROOT, 'files', 'json_utf8.json'), '--highlight', '1'], obj=Console())
 
         self.assertIn('❱ 1', result.output)
         self.assertEqual(result.exit_code, 0)
 
-    def test_highlight_accepts_a_csv_of_values(self):
-        result = self.runner.invoke(catz.commands.get, [join(
-            TESTS_ROOT, 'files', 'json_utf8.json'), '--highlight', '1,2,3'], obj=Console())
-        print(result.output)
+    @patch('catz.commands.get_content.click.get_text_stream')
+    def test_highlight_accepts_a_csv_of_values(self, mock_get_text_stream):
+        mock_get_text_stream.isatty.return_value = False
+        result = self.runner.invoke(
+            cli=catz.commands.get,
+            args=[join(TESTS_ROOT, 'files', 'json_utf8.json'), '--highlight', '1,2,3'],
+            obj=Console()
+        )
+
         self.assertIn('❱ 1', result.output)
         self.assertIn('❱ 2', result.output)
         self.assertIn('❱ 3', result.output)
