@@ -37,10 +37,7 @@ def show_themes(console, name):
 
     styles = list(get_all_styles())
 
-    data = '''
-        def test_function(i):
-            print(i)
-    '''.strip()
+    data = 'def test_function(i):\n\tprint(i)'.strip()
 
     if name is not None:
 
@@ -51,7 +48,8 @@ def show_themes(console, name):
             code=data,
             lexer_name='python',
             theme=name,
-            line_numbers=True
+            line_numbers=True,
+            background_color='default'
         )
         console.print(f'Theme: {name}')
         console.print(Syntax(**syntax_params))
@@ -62,7 +60,8 @@ def show_themes(console, name):
                 code=data,
                 lexer_name='python',
                 theme=i,
-                line_numbers=True
+                line_numbers=True,
+                background_color='default'
             )
 
             console.print(f'Theme: {i}')
