@@ -1,16 +1,15 @@
 # catz :pencil:
 
-A colourful syntax highlighting tool for your terminal.
+![catz](https://github.com/chelnak/catz/actions/workflows/ci.yml/badge.svg)
 
-`catz` is powered by [rich](https://github.com/willmcgugan/rich) and [pygments](https://github.com/pygments/pygments).
+`catz` is a colourful syntax highlighting tool for your terminal.
 
-## Supported filetypes
+![catz](media/default_usage.png)
 
-`catz` supports all of the lexers provided by pygments. You can find a full list [here](https://pygments.org/docs/lexers/).
 
 ## Install
 
-Install the latest release from the Releases page or run the following:
+Install the latest release with pip:
 
 ```bash
 pip install catz
@@ -18,26 +17,17 @@ pip install catz
 
 ## Usage
 
-File content syntax highlighting
 
-```bash
-catz ./tests/terraform.tf
-```
-
-### Override the default theme
+### Overriding the default theme
 
 ```bash
 catz ./HelloWorld.ps1 --theme vs
 ```
 
-### Passthrough
+### Overriding lexers
 
 ```bash
-catz ./HelloWorld.ps1 --passthru
-```
-
-```bash
-catz ./HelloWorld.ps1 --passthru >> output.txt
+catz ./HelloWorld.ps1 --lexer json
 ```
 
 ### Line highlighting
@@ -75,8 +65,3 @@ catz themes show --name vim
 ```bash
 catz lexers list
 ```
-
-## Releasing
-
-1. git tag -a vX.X.X -m "Release vX.X.X"
-2. git push --follow-tags

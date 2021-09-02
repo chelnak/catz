@@ -14,6 +14,7 @@ class HandleRangeInput(click.Option):
 
     Accepts a csv of numbers (1,2,6) or a range (1-6).
     """
+
     def consume_value(self, ctx, opts):
         value = super().consume_value(ctx, opts)
         highlight_exception_base = 'Invalid value for --highlight / -hl:'
@@ -77,18 +78,12 @@ class HandleRangeInput(click.Option):
               Accepts a comma separated list of line numbers.
               '''
               )
-@click.option('--passthru',
-              '-p',
-              is_flag=True,
-              envvar='CATZ_PASSTHRU',
-              help='''Pass the content of the file directly to stdout with no lexer applied.'''
-              )
 @click.pass_obj
-def get(console, file, theme, lexer, highlight, passthru):
+def get(console, file, theme, lexer, highlight):
 
     data = file.read()
 
-    if passthru:
+    if not click.get_text_stream('stdout').isatty():
         print(data, file=sys.stdout)
         return
 
