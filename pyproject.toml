@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "catz"
+version = "0.6.0"
+description = "A colourful syntax highlighting tool for your terminal"
+authors = ["Craig Gumbley <craiggumbley@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+rich = "^10.14.0"
+click = "^8.0.3"
+click-default-group = "^1.2.2"
+types-mock = "^4.0.4"
+pre-commit = "^2.15.0"
+
+[tool.isort]
+profile = "black"
+
+[tool.poetry.dev-dependencies]
+mock = "^4.0.3"
+pre-commit = "^2.15.0"
+black = "^21.11b1"
+isort = "^5.10.1"
+darglint = "^1.8.1"
+mypy = "^0.910"
+
+[tool.poetry.scripts]
+catz = "catz.app:main"
+test = "tests.harness:run"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

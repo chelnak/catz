@@ -3,4 +3,3 @@ resource "test" "test" {
     users = var.test
     group = var.test
   }
-  
