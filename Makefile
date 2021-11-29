@@ -18,9 +18,9 @@ check:
 	@source $(VENV)
 	black --check .
 	mypy tools
-	isort --check src/jenkins_tui
-	mypy src/jenkins_tui
-	darglint -m "{path}:{line} -> {msg_id}: {msg}" src/jenkins_tui
+	isort --check src
+	mypy src
+	darglint -m "{path}:{line} -> {msg_id}: {msg}" src
 
 # Developing
 .PHONY: init
