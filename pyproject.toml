@@ -10,9 +10,6 @@ python = "^3.9"
 rich = "^10.14.0"
 click = "^8.0.3"
 click-default-group = "^1.2.2"
-types-mock = "^4.0.4"
-pre-commit = "^2.15.0"
-mypy = "^0.910"
 
 [tool.isort]
 profile = "black"
@@ -24,6 +21,10 @@ black = "^21.11b1"
 isort = "^5.10.1"
 darglint = "^1.8.1"
 mypy = "^0.910"
+types-setuptools = "^57.4.4"
+types-toml = "^0.10.1"
+types-mock = "^4.0.4"
+
 
 [tool.poetry.scripts]
 catz = "catz.app:main"
