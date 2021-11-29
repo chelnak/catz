@@ -4,7 +4,7 @@ VENV ?= "$(shell poetry env list --full-path | cut -f1 -d " ")/bin/activate"
 
 # Releasing
 tag:
-	@git tag -a $(version) -m "Release $(version) -> Jenkins TUI"
+	@git tag -a $(version) -m "Release $(version) -> catz"
 	@git push --follow-tags
 
 # Building
