@@ -1,6 +1,0 @@
-setuptools==39.0.1
-flake8==3.8.2
-wheel==0.34.2
-rich==10.9.0
-click==8.0.1
-mock==4.0.3

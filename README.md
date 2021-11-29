@@ -1,3 +1,4 @@
+<!-- markdownlint-disable MD026 -->
 # catz :pencil:
 
 ![catz](https://github.com/chelnak/catz/actions/workflows/ci.yml/badge.svg)
@@ -5,7 +6,6 @@
 `catz` is a colourful syntax highlighting tool for your terminal.
 
 ![catz](media/default_usage.png)
-
 
 ## Install
 
@@ -16,7 +16,6 @@ pip install catz
 ```
 
 ## Usage
-
 
 ### Overriding the default theme
 
