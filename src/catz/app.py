@@ -71,9 +71,11 @@ def main(file: TextIO, theme: str, lexer: str, highlight: str) -> None:
     else:
         _lexer = get_lexer_from_name(lexer)
 
+    title = Text(f"path: {file.name}", style=Style(dim=True), justify="center")
+    sub_title = Text(f"type: {_lexer or 'unknown'}", style=Style(dim=True), justify="center")
     group = Group(
         Panel(
-            Align.center(Text(file.name, style=Style(dim=True)), vertical="middle"),
+            Align.center(Group(title, sub_title), vertical="middle"),
             padding=(1),
             border_style=Style(dim=True),
         ),

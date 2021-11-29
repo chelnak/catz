@@ -25,7 +25,7 @@ def get_lexer_from_filename(filename: str) -> str | None:
 
     try:
         lexer = get_lexer_for_filename(filename)
-        return lexer.name
+        return lexer.name.lower()
     except ClassNotFound:
         return None
 
@@ -42,7 +42,7 @@ def get_lexer_from_name(name: str) -> str | None:
 
     try:
         lexer = get_lexer_by_name(name)
-        return lexer.name
+        return lexer.name.lower()
     except ClassNotFound:
         return None
 
