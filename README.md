@@ -7,6 +7,8 @@
 
 ![catz](media/catz.png)
 
+🚀 This project is powered by [rich](https://github.com/willmcgugan/rich)!
+
 ## Installation and usage
 
 You can install the latest release with pip:
