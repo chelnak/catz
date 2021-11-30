@@ -65,7 +65,7 @@ def main(
         style (str): The style to use for syntax highlighting.
         language (str): The language to use for syntax highlighting.
         highlight (set[int]): The lines to highlight.
-        lines (tuple[int,int]): The lines to show.
+        line_range (tuple[int,int]): The lines to show.
     """
 
     console = Console()
