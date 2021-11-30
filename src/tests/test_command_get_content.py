@@ -35,7 +35,7 @@ class TestWhenExecutingWithAFileAsInput(unittest.TestCase):
     def test_it_should_fail_when_file_not_found(self):
         result = self.runner.invoke(app.main, ["./notfound.json"])
         self.assertEqual(result.exit_code, 2)
-        assert "Error: Invalid value for" in result.output
+        assert "Error: Invalid value" in result.output
 
     def test_it_should_return_expected_content(self):
         result = self.runner.invoke(
@@ -67,6 +67,43 @@ class TestWhenOutputIsRedirected(unittest.TestCase):
 
         self.assertIn("1", result.output)
         self.assertEqual(result.exit_code, 0)
+
+
+class TestWhenUsingLineRange(unittest.TestCase):
+    def setUp(self):
+        self.runner = CliRunner()
+
+    @patch("catz.app.click.get_text_stream")
+    def test_line_range_does_not_accept_a_single_value(self, mock_get_text_stream):
+        mock_get_text_stream.isatty.return_value = False
+
+        result = self.runner.invoke(
+            app.main, [join(TESTS_ROOT, "files", "json_utf8.json"), "--line-range", "1"]
+        )
+        self.assertEqual(result.exit_code, 2)
+        self.assertEqual(
+            result.output.strip(),
+            "Error: Option '--line-range' requires 2 arguments.",
+        )
+
+    @patch("catz.app.click.get_text_stream")
+    def test_line_range_returns_expected_lines(self, mock_get_text_stream):
+        mock_get_text_stream.isatty.return_value = False
+
+        result = self.runner.invoke(
+            app.main,
+            [
+                join(TESTS_ROOT, "files", "json_utf8.json"),
+                "--line-range",
+                "1",
+                "2",
+            ],
+        )
+
+        self.assertIn("1 {", result.output)
+        self.assertIn('  2     "test": "file"', result.output)
+        self.assertNotIn("3", result.output)
+        self.assertNotIn("4", result.output)
 
 
 class TestWhenHighlightingLines(unittest.TestCase):
@@ -102,7 +139,7 @@ class TestWhenHighlightingLines(unittest.TestCase):
         )
         self.assertEqual(
             result.output.strip(),
-            "Error: Invalid value for --highlight / -hl: invalid literal for int() with base 10: '1x' is not a valid integer range",
+            "Error: Invalid value! invalid literal for int() with base 10: '1x' is not a valid integer range.",
         )
 
     def test_highlight_fails_for_invalid_range_input(self):
@@ -112,7 +149,7 @@ class TestWhenHighlightingLines(unittest.TestCase):
         )
         self.assertEqual(
             result.output.strip(),
-            "Error: Invalid value for --highlight / -hl: invalid literal for int() with base 10: 'z' is not a valid integer range",
+            "Error: Invalid value! invalid literal for int() with base 10: 'z' is not a valid integer range.",
         )
 
     def test_higlight_accepts_a_range_of_values(self):
@@ -129,7 +166,7 @@ class TestWhenHighlightingLines(unittest.TestCase):
         )
         self.assertEqual(
             result.output.strip(),
-            "Error: Invalid value for --highlight / -hl: 10 is greater than 1",
+            "Error: Invalid value! 10 is greater than 1.",
         )
 
     def test_highlight_fails_when_range_contains_more_than_two_values(self):
@@ -139,7 +176,7 @@ class TestWhenHighlightingLines(unittest.TestCase):
         )
         self.assertEqual(
             result.output.strip(),
-            "Error: Invalid value for --highlight / -hl: Could not convert 10-11-12 to a valid range",
+            "Error: Invalid value! Could not convert 10-11-12 to a valid range.",
         )
 
 

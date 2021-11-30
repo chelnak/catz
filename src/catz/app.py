@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 import sys
-from json import loads
 from typing import TextIO
 
 import click
@@ -7,14 +8,13 @@ from rich.align import Align
 from rich.console import Console, Group
 from rich.padding import Padding
 from rich.panel import Panel
-from rich.repr import T
 from rich.style import Style
 from rich.syntax import Syntax
 from rich.text import Text
 
 from . import __version__
-from .lexers import get_lexer_from_filename, get_lexer_from_name
-from .range import RangeInput
+from .languages import get_lexer_from_filename, get_lexer_from_name
+from .options import RangeInputOption
 
 
 @click.command(
@@ -27,52 +27,63 @@ from .range import RangeInput
     default=sys.stdin,
 )
 @click.option(
-    "--theme",
-    "-t",
-    default="native",
-    help="""Override the default syntaxt highlighting theme.
-              You can use catz themes list to view a list of available themes.""",
+    "--style",
+    "-s",
+    default="solarized-dark",
+    help="Override the default syntaxt highlighting style. For a list of styles visit https://pygments.org/styles or run python -m catz.styles.",
 )
 @click.option(
-    "--lexer",
+    "--language",
     "-l",
-    help="""Override the lexer used when applying syntax highlighting.
-              You can use catz lexers list to view a list of available lexers.""",
+    help="Override the language used when applying syntax highlighting. For a list of languages visit https://pygments.org/languages or run python -m catz.languages.",
 )
 @click.option(
     "--highlight",
     "-hl",
-    cls=RangeInput,
-    help="""Highlight specific lines in the parsed file.
-              Accepts a comma separated list of line numbers.
-              """,
+    cls=RangeInputOption,
+    type=set[int],
+    help="Highlight specific lines in the parsed file. Accepts a comma separated list (e.g. 1,2,3,4,5) or a range (e.g 1-5) of line numbers.",
+)
+@click.option(
+    "--line-range",
+    "-lr",
+    type=click.types.Tuple([int, int]),
+    help="Only display a range of lines in the file. Accepts two integers separated by a space (e.g. 1 5).",
 )
 @click.version_option(__version__)
-def main(file: TextIO, theme: str, lexer: str, highlight: str) -> None:
+def main(
+    file: TextIO,
+    style: str,
+    language: str,
+    highlight: set[int],
+    line_range: tuple[int, int],
+) -> None:
     """Perform syntax highlighting on raw text from a local file or stdin.
 
     Args:
-        file: The file object to read from.
-        theme: The theme to use for syntax highlighting.
-        lexer: The lexer to use for syntax highlighting.
-        highlight: The lines to highlight.
+        file (TextIO): The file object to read from.
+        style (str): The style to use for syntax highlighting.
+        language (str): The language to use for syntax highlighting.
+        highlight (set[int]): The lines to highlight.
+        lines (tuple[int,int]): The lines to show.
     """
+
     console = Console()
     data = file.read()
-    _highlight = set(loads(highlight)) if highlight else None
-    filename = file.name
 
     if not click.get_text_stream("stdout").isatty():
         print(data, file=sys.stdout)
         return
 
-    if not lexer:
-        _lexer = get_lexer_from_filename(filename)
+    if not language:
+        _language = get_lexer_from_filename(file.name)
     else:
-        _lexer = get_lexer_from_name(lexer)
+        _language = get_lexer_from_name(language)
 
     title = Text(f"path: {file.name}", style=Style(dim=True), justify="center")
-    sub_title = Text(f"type: {_lexer or 'unknown'}", style=Style(dim=True), justify="center")
+    sub_title = Text(
+        f"type: {_language or 'unknown'}", style=Style(dim=True), justify="center"
+    )
     group = Group(
         Panel(
             Align.center(Group(title, sub_title), vertical="middle"),
@@ -82,13 +93,14 @@ def main(file: TextIO, theme: str, lexer: str, highlight: str) -> None:
         Padding(
             Syntax(
                 code=data,
-                lexer_name=_lexer or "",
-                theme=theme,
+                lexer_name=_language or "",
+                theme=style,
                 line_numbers=True,
                 background_color="default",
-                highlight_lines=_highlight,
+                highlight_lines=highlight,
+                line_range=line_range,
             ),
-            pad=(1, 0, 0, 0),
+            pad=(1, 0, 1, 0),
         ),
     )
 
