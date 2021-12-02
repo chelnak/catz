@@ -50,6 +50,11 @@ from .options import RangeInputOption
     type=click.types.Tuple([int, int]),
     help="Only display a range of lines in the file. Accepts two integers separated by a space (e.g. 1 5).",
 )
+@click.option(
+    "--indent-guides",
+    is_flag=True,
+    help="Display indentation guides.",
+)
 @click.version_option(__version__)
 def main(
     file: TextIO,
@@ -57,6 +62,7 @@ def main(
     language: str,
     highlight: set[int],
     line_range: tuple[int, int],
+    indent_guides: bool,
 ) -> None:
     """Perform syntax highlighting on raw text from a local file or stdin.
 
@@ -66,6 +72,7 @@ def main(
         language (str): The language to use for syntax highlighting.
         highlight (set[int]): The lines to highlight.
         line_range (tuple[int,int]): The lines to show.
+        indent_guides (bool): Display indentation guides.
     """
 
     console = Console()
@@ -99,6 +106,7 @@ def main(
                 background_color="default",
                 highlight_lines=highlight,
                 line_range=line_range,
+                indent_guides=indent_guides,
             ),
             pad=(1, 0, 1, 0),
         ),
