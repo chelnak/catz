@@ -22,3 +22,7 @@ Once the app is installed view the usage with:
 ```bash
 catz --help
 ```
+
+## Similar projects
+
+* [bat](https://github.com/sharkdp/bat) - A cat(1) clone with wings.
