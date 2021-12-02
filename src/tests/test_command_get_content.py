@@ -69,6 +69,22 @@ class TestWhenOutputIsRedirected(unittest.TestCase):
         self.assertEqual(result.exit_code, 0)
 
 
+class TestWhenUsingIndentGuides(unittest.TestCase):
+    def setUp(self):
+        self.runner = CliRunner()
+
+    @patch("catz.app.click.get_text_stream")
+    def test_indend_guides_renders_correctly(self, mock_get_text_stream):
+        mock_get_text_stream.isatty.return_value = True
+
+        result = self.runner.invoke(
+            app.main, [join(TESTS_ROOT, "files", "json_utf8.json"), "--indent-guides"]
+        )
+
+        self.assertIn('  2 │   "test": "file"', result.output)
+        self.assertEqual(result.exit_code, 0)
+
+
 class TestWhenUsingLineRange(unittest.TestCase):
     def setUp(self):
         self.runner = CliRunner()
