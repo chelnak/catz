@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "catz"
-version = "0.8.0"
+version = "0.9.0"
 description = "A colourful syntax highlighting tool for your terminal"
 authors = [ "Craig Gumbley <craiggumbley@gmail.com>",]
 license = "MIT"
